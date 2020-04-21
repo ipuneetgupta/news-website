@@ -225,13 +225,13 @@
 			<div class="col-sm-6 col-md-4">
 				<!-- Item latest -->
 				<div class="m-b-45">
-					<a href="blog-detail-02.html" class="wrap-pic-w hov1 trans-03">
+					<a href="{%url 'news_detail' word=i.name %}" class="wrap-pic-w hov1 trans-03">
 						<img src="{%static 'front/images/latest-01.jpg'%}" alt="IMG">
 					</a>
 
 					<div class="p-t-16">
 						<h5 class="p-b-5">
-							<a href="blog-detail-02.html" class="f1-m-3 cl2 hov-cl10 trans-03">
+							<a href="{%url 'news_detail' word=i.name %}" class="f1-m-3 cl2 hov-cl10 trans-03">
 								{{i.short_txt}}
 							</a>
 						</h5>
