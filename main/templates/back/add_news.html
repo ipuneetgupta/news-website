@@ -42,8 +42,9 @@
                     <div class="col-md-6">
                         <select id="newsCat" name="newsCat" class="select-chosen" data-placeholder="Chosse a Category.."
                             style="width: 250px;">
-                            <option></option><!-- Required for data-placeholder attribute to work with Chosen plugin -->
-                            <option value="United States">United States</option>
+                            {% for c in cat %}
+                            <option value="{{c.catId}}">{{c.subcatName}} | {{c.catName}}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>

@@ -1,0 +1,58 @@
+{% extends 'back/master.html' %}
+{% load static %}
+
+
+{% block mainblock %}
+<!-- Page content -->
+<div id="page-content">
+    <!-- Datatables Header -->
+    <div class="content-header">
+        <div class="header-section">
+            <h1>
+                <i class="fa fa-table"></i>Add Category<br><small>You can add new CategoryTitle
+                </small>
+            </h1>
+        </div>
+    </div>
+    <ul class="breadcrumb breadcrumb-top">
+        <li>AddCategory</li>
+        <li><a href="/panel/category/add">Add</a></li>
+    </ul>
+    <!-- END Datatables Header -->
+</div>
+<!-- END Page Content -->
+<div class="row">
+    <div class="col-md-12">
+        <!-- Input Grid Block -->
+        <div class="block">
+            <!-- Input Grid Title -->
+            <div class="block-title">
+                <h2>Add Category<h2>
+            </div>
+            <!-- END Input Grid Title -->
+
+            <!-- Input Grid Content -->
+            <form action="{%url 'cat_add' %}" method="post" class="form-horizontal form-bordered" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <input type="text" id='catName' name='catName' class="form-control"
+                            placeholder="Category Title">
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-angle-right"></i>
+                            Submit</button>
+                    </div>
+                </div>
+            </form>
+            <!-- END Input Grid Content -->
+        </div>
+        <!-- END Input Grid Block -->
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{%static 'back/js/pages/tablesDatatables.js'%}"></script>
+<script>$(function () { TablesDatatables.init(); });</script>
+{% endblock %}

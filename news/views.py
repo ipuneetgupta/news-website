@@ -3,6 +3,7 @@ from .models import News
 from main.models import Main
 from django.core.files.storage import FileSystemStorage
 import datetime
+from subcat.models import SubCat
 # Create your views here.
 def news_detail(request,word):
     site = Main.objects.get(pk=2)
@@ -15,61 +16,64 @@ def news_list(request):
 
 def add_news(request):
     
-    # print("----------------------------------")
     # #datetime
-    # now = datetime.datetime.now()
-    # year = str(now.year)
-    # month = str(now.month)
-    # day = str(now.day)
+    now = datetime.datetime.now()
+    year = str(now.year)
+    month = str(now.month)
+    day = str(now.day)
 
-    # if len(day) == 1:
-    #     day = "0"+day
-    # if len(month) == 1:
-    #     month = "0"+month
-    # print(day+"/"+month+"/"+year)
+    if len(day) == 1:
+        day = "0"+day
+    if len(month) == 1:
+        month = "0"+month
+    currDate = day+"/"+month+"/"+year
 
-    # hr = str(now.hour)
-    # min = str(now.minute)
-    # time = hr+":"+min
+    hr = str(now.hour)
+    min = str(now.minute)
+    currTime = hr+":"+min
 
-    # print(time)
-    # print("------------------------------------")
+    cat = SubCat.objects.all()
 
     if request.method == 'POST':
         titleNews = request.POST.get("newsTitle")
         publishDate = request.POST.get("publishDate")
-        newCategory = request.POST.get("newsCat")
         shortTxt = request.POST.get("shortTxt")
         newsContent = request.POST.get("NewsContent")
         writerName = request.POST.get("writerName")
-
-        if titleNews=="" or publishDate=="" or shortTxt == "" or newsContent == "" or writerName == "" or newCategory=="":
+        catId = request.POST.get("newsCat")
+        
+        if titleNews==""  or shortTxt == "" or newsContent == "" or writerName == "":
             error_msg = "error ! u need to fill all fields of form"
             return render(request,'back/error.html',{'error':error_msg})
         try:
             myfile = request.FILES["myfile"]
-
+            fs = FileSystemStorage()
+            filename = fs.save(myfile.name,myfile)
+            url = fs.url(filename)
             if str(myfile.content_type).startswith('image'):
                 if myfile.size < 5000000:
-                    fs = FileSystemStorage()
-                    filename = fs.save(myfile.name,myfile)
-                    url = fs.url(filename)
-                    news = News(title=titleNews,newsSummary=shortTxt,newsContent=newsContent,writerName=writerName,catName=newCategory,catId=0,views=0,newsImageUrl=url,publishDate=publishDate,newsImageName=filename)
+                    catName = SubCat.objects.get(pk=catId).catName
+                    if publishDate=="":
+                        publishDate+= currDate+" | "+currTime
+                    
+                    news = News(title=titleNews,newsSummary=shortTxt,newsContent=newsContent,writerName=writerName,catName=catName,catId=catId,views=0,newsImageUrl=url,publishDate=publishDate,newsImageName=filename)
                     news.save()
                 else:
+                    fs.delete(filename)
                     error_msg = "error ! ur file is Bigger than 5mb"
                     return render(request,'back/error.html',{'error':error_msg})
             
             else:
-                 error_msg = "error ! ur file is not supported"
-                 return render(request,'back/error.html',{'error':error_msg})
+                fs.delete(filename)
+                error_msg = "error ! ur file is not supported"
+                return render(request,'back/error.html',{'error':error_msg})
             
         except:
             error_msg = "error ! u need to upload a file in this form"
             return render(request,'back/error.html',{'error':error_msg})
 
         return redirect('news_list')
-    return render(request,'back/add_news.html')
+    return render(request,'back/add_news.html',{'cat':cat})
 
 def news_delete(request,pk):
     try:
