@@ -11,3 +11,6 @@ def home(request):
 def about(request):
     site = Main.objects.get(pk=2)
     return render(request,'front/about.html',{'site':site})
+
+def panel(request):
+    return render(request,'back/panel.html')
