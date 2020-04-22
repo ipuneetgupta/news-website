@@ -9,14 +9,14 @@
     <div class="content-header">
         <div class="header-section">
             <h1>
-                <i class="fa fa-table"></i>NewsList<br><small>u can edit ,delete or add new news in this
-                    newslist</small>
+                <i class="fa fa-table"></i>CategoryList<br><small>u can edit ,delete or add new category in this
+                    categoryList</small>
             </h1>
         </div>
     </div>
     <ul class="breadcrumb breadcrumb-top">
-        <li>News</li>
-        <li><a href="/panel/news/list">Lists</a></li>
+        <li>Category</li>
+        <li><a href="/panel/category/list">Lists</a></li>
     </ul>
     <!-- END Datatables Header -->
 
@@ -30,33 +30,20 @@
                 <thead>
                     <tr>
                         <th class="text-center">ID</th>
-                        <th class="text-center"><i class="gi gi-user"></i></th>
-                        <th>Title</th>
-                        <th>summary</th>
-                        <th>Date</th>
-                        <th>Category</th>
-                        <th>Writer</th>
-                        <th>views</th>
+                        <th>Name</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for c in news %}
+                    {% for c in cat %}
                     <tr>
                         <td class="text-center">{{c.pk}}</td>
-                        <td class="text-center"><img style="display: inline-block; width: 50px; height: 50px;" src="{{c.newsImageUrl}}"
-                                alt="avatar" class="img-circle"></td>
-                        <td>{{c.title}}</td>
-                        <td>{{c.newsSummary}}</td>
-                        <td>{{c.publishDate}}</td>
                         <td>{{c.catName}}</td>
-                        <td>{{c.writerName}}</td>
-                        <td>{{c.views}}</td>
                         <td class="text-center">
                             <div class="btn-group">
-                                <a href="javascript:void(0)" data-toggle="tooltip" title="Edit"
+                                <a href="#" data-toggle="tooltip" title="Edit"
                                     class="btn btn-xs btn-default"><i class="fa fa-pencil"></i>Edit</a>
-                                <a href="{%url 'news_delete' pk=c.pk %}" data-toggle="tooltip" title="Delete"
+                                <a href="#" data-toggle="tooltip" title="Delete"
                                     class="btn btn-xs btn-danger"><i class="fa fa-times"></i>Delete</a>
                             </div>
                         </td>

@@ -47,24 +47,24 @@
                         </a>
 
                         <h3 class="f1-l-3 cl2 p-b-16 p-t-33 respon2">
-                            {{i.short_txt}}
+                            {{i.newsSummary}}
                         </h3>
 
                         <div class="flex-wr-s-s p-b-40">
                             <span class="f1-s-3 cl8 m-r-15">
                                 <a href="#" class="f1-s-4 cl8 hov-cl10 trans-03">
-                                    by {{i.writer}}
+                                    by {{i.writerName}}
                                 </a>
 
                                 <span class="m-rl-3">-</span>
 
                                 <span>
-                                    {{i.date}}
+                                    {{i.publishDate}}
                                 </span>
                             </span>
 
                             <span class="f1-s-3 cl8 m-r-15">
-                                5239 Views
+                                {{i.views}} Views
                             </span>
 
                             <a href="#" class="f1-s-3 cl8 hov-cl10 trans-03 m-r-15">
@@ -73,11 +73,11 @@
                         </div>
 
                         <div class="wrap-pic-max-w p-b-30">
-                            <img src="{%static 'front/images/blog-list-01.jpg' %}" alt="IMG">
+                            <img src="{{i.newsImageUrl}}" alt="IMG">
                         </div>
 
                         <p class="f1-s-11 cl6 p-b-25">
-                            {{i.body_txt}}
+                            {{i.newsContent}}
                         </p>
 
 
@@ -98,7 +98,7 @@
                             </div>
                         </div>
 
-                        
+
                     </div>
 
                     <!-- Leave a comment -->

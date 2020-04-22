@@ -1,0 +1,95 @@
+{% extends 'back/master.html' %}
+{% load static %}
+
+
+{% block mainblock %}
+<!-- Page content -->
+<div id="page-content">
+    <!-- Datatables Header -->
+    <div class="content-header">
+        <div class="header-section">
+            <h1>
+                <i class="fa fa-table"></i>Add News<br><small>You can add new news
+                </small>
+            </h1>
+        </div>
+    </div>
+    <ul class="breadcrumb breadcrumb-top">
+        <li>AddNews</li>
+        <li><a href="/panel/news/add">Add</a></li>
+    </ul>
+    <!-- END Datatables Header -->
+</div>
+<!-- END Page Content -->
+<div class="row">
+    <div class="col-md-12">
+        <!-- Input Grid Block -->
+        <div class="block">
+            <!-- Input Grid Title -->
+            <div class="block-title">
+                <h2>Add News<h2>
+            </div>
+            <!-- END Input Grid Title -->
+
+            <!-- Input Grid Content -->
+            <form action="{%url 'add_news' %}" method="post" class="form-horizontal form-bordered" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <textarea type="text" id='newsTitle' name='newsTitle' rows='2' class="form-control"
+                            placeholder="News Title"></textarea>>
+                    </div>
+                    <div class="col-md-6">
+                        <select id="newsCat" name="newsCat" class="select-chosen" data-placeholder="Chosse a Category.."
+                            style="width: 250px;">
+                            <option></option><!-- Required for data-placeholder attribute to work with Chosen plugin -->
+                            <option value="United States">United States</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input type="text" id="publishDate" name='publishDate' class="form-control"
+                            placeholder="News Publish Date">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <textarea type="text" id="shortTxt" name='shortTxt' class="form-control"
+                            placeholder="ShortNews"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <textarea type="text" id='NewsContent' name='NewsContent' rows='5' class="form-control"
+                            placeholder="NewsContent"></textarea>>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input type="text" id='writerName' name='writerName' class="form-control" placeholder="writer">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <input type="file" id='myfile' name='myfile' class="form-control" placeholder="newsImage">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-angle-right"></i>
+                            Submit</button>
+                    </div>
+                </div>
+            </form>
+            <!-- END Input Grid Content -->
+        </div>
+        <!-- END Input Grid Block -->
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script src="{%static 'back/js/pages/tablesDatatables.js'%}"></script>
+<script>$(function () { TablesDatatables.init(); });</script>
+{% endblock %}
