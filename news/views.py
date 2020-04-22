@@ -6,3 +6,6 @@ def news_detail(request,word):
     site = Main.objects.get(pk=2)
     news = News.objects.filter(name=word)
     return render(request,'front/news_detail.html',{'news':news,'site':site})
+
+def news_list(request):
+    return render(request,'back/news_list.html')
