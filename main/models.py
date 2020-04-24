@@ -4,8 +4,8 @@ from django.db import models
 
 
 class Main(models.Model):
-    name = models.CharField(default="#",max_length=100)
-    about = models.TextField()
+    titleName = models.CharField(default="#",max_length=100)
+    about = models.TextField(default="#")
     fb = models.CharField(default="#", max_length=300)
     tw = models.CharField(default="#", max_length=300)
     yt = models.CharField(default="#", max_length=300)
@@ -14,6 +14,12 @@ class Main(models.Model):
     tel = models.CharField(default="#", max_length=10)
     mylink = models.CharField(default="#", max_length=300)
     site_name = models.CharField(default="#", max_length=300)
+    imageUrl = models.TextField(default=" ")
+    imageName = models.TextField(default=" ")
+    imageUrl1 = models.TextField(default=" ")
+    imageName1 = models.TextField(default=" ")
 
+
+    
     def __str__(self):
-        return self.site_name+" | "+str(self.pk)
+        return str(self.site_name)+" | "+str(self.pk)

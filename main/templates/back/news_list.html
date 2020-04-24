@@ -46,15 +46,15 @@
                         <td class="text-center">{{c.pk}}</td>
                         <td class="text-center"><img style="display: inline-block; width: 50px; height: 50px;" src="{{c.newsImageUrl}}"
                                 alt="avatar" class="img-circle"></td>
-                        <td>{{c.title}}</td>
-                        <td>{{c.newsSummary}}</td>
+                        <td>{{c.title|safe}}</td>
+                        <td>{{c.newsSummary|safe}}</td>
                         <td>{{c.publishDate}}</td>
                         <td>{{c.catName}}</td>
                         <td>{{c.writerName}}</td>
                         <td>{{c.views}}</td>
                         <td class="text-center">
                             <div class="btn-group">
-                                <a href="javascript:void(0)" data-toggle="tooltip" title="Edit"
+                                <a href="{%url 'news_edit' pk=c.pk %}" data-toggle="tooltip" title="Edit"
                                     class="btn btn-xs btn-default"><i class="fa fa-pencil"></i>Edit</a>
                                 <a href="{%url 'news_delete' pk=c.pk %}" data-toggle="tooltip" title="Delete"
                                     class="btn btn-xs btn-danger"><i class="fa fa-times"></i>Delete</a>
@@ -72,7 +72,7 @@
 
 {% endblock %}
 
-{% block script %}
+{% block footerblock %}
 <script src="{%static 'back/js/pages/tablesDatatables.js'%}"></script>
 <script>$(function () { TablesDatatables.init(); });</script>
 {% endblock %}

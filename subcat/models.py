@@ -10,4 +10,4 @@ class SubCat(models.Model):
 
     
     def __str__(self):
-        return self.subcatName
+        return str(self.subcatName)+" | " + str(self.pk)

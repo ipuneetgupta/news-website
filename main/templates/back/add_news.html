@@ -1,6 +1,10 @@
 {% extends 'back/master.html' %}
 {% load static %}
 
+{% block headerblock %}
+<script src="{%static 'ckeditor/ckeditor.js' %}"></script>
+<!-- <script src="https://cdn.ckeditor.com/ckeditor5/18.0.0/classic/ckeditor.js"></script> -->
+{% endblock %}
 
 {% block mainblock %}
 <!-- Page content -->
@@ -43,7 +47,7 @@
                         <select id="newsCat" name="newsCat" class="select-chosen" data-placeholder="Chosse a Category.."
                             style="width: 250px;">
                             {% for c in cat %}
-                            <option value="{{c.catId}}">{{c.subcatName}} | {{c.catName}}</option>
+                            <option value="{{c.pk}}">{{c.subcatName}} | {{c.catName}}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -56,16 +60,21 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-12">
-                        <textarea type="text" id="shortTxt" name='shortTxt' class="form-control"
-                            placeholder="ShortNews"></textarea>
+                        <textarea type="text" id="shortTxt" name='shortTxt' rows='5' class="form-control"
+                            placeholder="ShortNews">ShortNews</textarea>
                     </div>
                 </div>
+
+                <script>ClassicEditor.create(document.getElementById("shortTxt"))</script>
+
                 <div class="form-group">
                     <div class="col-md-12">
-                        <textarea type="text" id='NewsContent' name='NewsContent' rows='5' class="form-control"
-                            placeholder="NewsContent"></textarea>>
+                        <textarea type="text" id='NewsContent' name='NewsContent' rows='10' class="form-control"
+                            placeholder="NewsContent">NewsContent</textarea>>
                     </div>
                 </div>
+                <script>ClassicEditor.create(document.getElementById("NewsContent"))</script>
+
                 <div class="form-group">
                     <div class="col-md-12">
                         <input type="text" id='writerName' name='writerName' class="form-control" placeholder="writer">
@@ -90,7 +99,7 @@
 </div>
 {% endblock %}
 
-{% block script %}
+{% block footerblock %}
 <script src="{%static 'back/js/pages/tablesDatatables.js'%}"></script>
 <script>$(function () { TablesDatatables.init(); });</script>
 {% endblock %}

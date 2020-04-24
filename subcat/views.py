@@ -2,10 +2,22 @@ from django.shortcuts import render,get_object_or_404,redirect
 from .models import SubCat
 from cat.models import Cat
 def subcat_list(request):
+    
+     #adminlogin start
+    if not request.user.is_authenticated:
+        return redirect('mylogin')
+    #adminlogin end
+
     subcat = SubCat.objects.all()
     return render(request,'back/subcat_list.html',{'subcat':subcat})
 
 def subcat_add(request):
+
+     #adminlogin start
+    if not request.user.is_authenticated:
+        return redirect('mylogin')
+    #adminlogin end
+
     cat = Cat.objects.all()
     if request.method == "POST":
         subcatName = request.POST.get("subcatName")

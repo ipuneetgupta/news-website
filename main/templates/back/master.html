@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 {% load static %}
+
+{% if user.is_authenticated %}
 <!--[if IE 9]>         <html class="no-js lt-ie10" lang="en"> <![endif]-->
 <!--[if gt IE 9]><!-->
 <html class="no-js" lang="en">
@@ -43,7 +45,9 @@
     <!-- The themes stylesheet of this template (for using specific theme color in individual elements - must included last) -->
     <link rel="stylesheet" href="{%static 'back/css/themes.css'%}">
     <!-- END Stylesheets -->
-
+     
+    {% block headerblock %}
+    {% endblock %}
     <!-- Modernizr (browser feature detection library) -->
     <script src="{%static 'back/js/vendor/modernizr.min.js'%}"></script>
 </head>
@@ -131,7 +135,7 @@
                                 <a href="javascript:void(0)" class="enable-tooltip" data-placement="bottom"
                                     title="Settings" onclick="$('#modal-user-settings').modal('show');"><i
                                         class="gi gi-cogwheel"></i></a>
-                                <a href="login.html" data-toggle="tooltip" data-placement="bottom" title="Logout"><i
+                                <a href="/logout" data-toggle="tooltip" data-placement="bottom" title="Logout"><i
                                         class="gi gi-exit"></i></a>
                             </div>
                         </div>
@@ -147,11 +151,19 @@
                             </li>
 
                             <li class="sidebar-header">
-                                <span class="sidebar-header-options clearfix"><a href="javascript:void(0)"
+                                <span class="sidebar-header-options clearfix"><a href="/panel/setting/"
                                         data-toggle="tooltip" title="Quick Settings"><i
                                             class="gi gi-settings"></i></a></span>
                                 <span class="sidebar-header-title">site Setting</span>
                             </li>
+                            <li>
+                                <a href="/panel/setting/" ><i class= "gi gi-show_big_thumbnails sidebar-nav-icon"></i><span
+                                        class="sidebar-nav-mini-hide">Site Setting</span></a>
+                            </li>
+                            <li class="sidebar-header">
+                                <span class="sidebar-header-title">News Section</span>
+                            </li>
+                            <li>
                             <li>
                                 <a href="#" class="sidebar-nav-menu"><i
                                         class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i
@@ -277,9 +289,15 @@
     <script src="{%static 'back/js/helpers/gmaps.min.js'%}"></script>
 
     <!-- Load and execute javascript code used only in this page -->
-    {% block script %}
+    {% block footerblock %}
     {%  endblock %}
 
 </body>
 
 </html>
+
+{% else %}
+
+pleasee login
+
+{% endif %}

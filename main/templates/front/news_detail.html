@@ -1,7 +1,7 @@
 {% extends 'front/master.html' %}
 {% load static %}
 {% block headblock %}
-<title>{{site.name}}</title>
+<title>{{site.titleName}}</title>
 {%  endblock %}
 
 
@@ -11,12 +11,12 @@
 <div class="container">
     <div class="headline bg0 flex-wr-sb-c p-rl-20 p-tb-8">
         <div class="f2-s-1 p-r-30 m-tb-6">
-            <a href="index.html" class="breadcrumb-item f1-s-3 cl9">
+            <a href="/" class="breadcrumb-item f1-s-3 cl9">
                 Home
             </a>
 
-            <a href="blog-list-01.html" class="breadcrumb-item f1-s-3 cl9">
-                Blog
+            <a href="#" class="breadcrumb-item f1-s-3 cl9">
+                News
             </a>
 
             <span class="breadcrumb-item f1-s-3 cl9">
@@ -34,7 +34,7 @@
 </div>
 
 <!-- Content -->
-{% for i in news %}
+{% for i in shownews %}
 <section class="bg0 p-b-140 p-t-10">
     <div class="container">
         <div class="row justify-content-center">
@@ -43,12 +43,14 @@
                     <!-- Blog Detail -->
                     <div class="p-b-70">
                         <a href="#" class="f1-s-10 cl2 hov-cl10 trans-03 text-uppercase">
-                            Technology
+                            {{i.catName}}
                         </a>
 
                         <h3 class="f1-l-3 cl2 p-b-16 p-t-33 respon2">
-                            {{i.newsSummary}}
+                            {{i.title|safe}}
                         </h3>
+
+                        <h4>{{i.newsSummary|safe}}</h4>
 
                         <div class="flex-wr-s-s p-b-40">
                             <span class="f1-s-3 cl8 m-r-15">
@@ -77,7 +79,7 @@
                         </div>
 
                         <p class="f1-s-11 cl6 p-b-25">
-                            {{i.newsContent}}
+                            {{i.newsContent|safe}}
                         </p>
 
 
@@ -144,35 +146,13 @@
                         </div>
 
                         <ul class="p-t-35">
+                            {% for c in cat %}
                             <li class="how-bor3 p-rl-4">
                                 <a href="#" class="dis-block f1-s-10 text-uppercase cl2 hov-cl10 trans-03 p-tb-13">
-                                    Fashion
+                                    {{c.catName}}({{c.newsCount}})
                                 </a>
                             </li>
-
-                            <li class="how-bor3 p-rl-4">
-                                <a href="#" class="dis-block f1-s-10 text-uppercase cl2 hov-cl10 trans-03 p-tb-13">
-                                    Beauty
-                                </a>
-                            </li>
-
-                            <li class="how-bor3 p-rl-4">
-                                <a href="#" class="dis-block f1-s-10 text-uppercase cl2 hov-cl10 trans-03 p-tb-13">
-                                    Street Style
-                                </a>
-                            </li>
-
-                            <li class="how-bor3 p-rl-4">
-                                <a href="#" class="dis-block f1-s-10 text-uppercase cl2 hov-cl10 trans-03 p-tb-13">
-                                    Life Style
-                                </a>
-                            </li>
-
-                            <li class="how-bor3 p-rl-4">
-                                <a href="#" class="dis-block f1-s-10 text-uppercase cl2 hov-cl10 trans-03 p-tb-13">
-                                    DIY & Crafts
-                                </a>
-                            </li>
+                             {% endfor %}
                         </ul>
                     </div>
 
