@@ -51,17 +51,11 @@
 
 							<span class="dis-inline-block cl16 slide100-txt pos-relative size-w-0" data-in="fadeInDown"
 								data-out="fadeOutDown">
+								{% for t in trending %}
 								<span class="dis-inline-block slide100-txt-item animated visible-false">
-									Interest rate angst trips up US equity bull market
+									{{t.title}}
 								</span>
-
-								<span class="dis-inline-block slide100-txt-item animated visible-false">
-									Designer fashion show kicks off Variety Week
-								</span>
-
-								<span class="dis-inline-block slide100-txt-item animated visible-false">
-									Microsoft quisque at ipsum vel orci eleifend ultrices
-								</span>
+                                 {% endfor %}
 							</span>
 						</div>
 					</div>
@@ -75,16 +69,12 @@
 								About
 							</a>
 
-							<a href="#" class="left-topbar-item">
+							<a href="/contact" class="left-topbar-item">
 								Contact
 							</a>
 
-							<a href="#" class="left-topbar-item">
-								Sing up
-							</a>
-
-							<a href="#" class="left-topbar-item">
-								Log in
+							<a href="/login" class="left-topbar-item">
+								Log in | Sing up
 							</a>
 
 							<a href="#" class="left-topbar-item"></a>
@@ -125,9 +115,6 @@
 					<a href="/"><img src="{{site.imageUrl1}}"
 							style="display: inline-block;width:350px; height: 110px; align-self: center;"
 							alt="LOGO"></a>
-
-
-
 				</div>
 			</div>
 
@@ -136,8 +123,8 @@
 				<div class="main-nav">
 					<!-- Menu desktop -->
 					<nav class="menu-desktop">
-						<a class="logo-stick" href="index.html">
-							<img src="images/icons/logo-01.png" alt="LOGO">
+						<a class="logo-stick" href="/">
+							<img src="{{site.imageUrl}}" alt="LOGO">
 						</a>
 
 						<ul class="main-menu justify-content-center">
@@ -277,7 +264,7 @@
 				<div class="row">
 					<div class="col-lg-4 p-b-20">
 						<div class="size-h-3 flex-s-c">
-							<a href="index.html">
+							<a href="/">
 								<img class="max-s-full" style="display: inline-block;width: 70px; height: 70px;"
 									src="{{site.imageUrl}}" alt="LOGO">
 							</a>
@@ -324,59 +311,27 @@
 						</div>
 
 						<ul>
+							{% for pop in pop3news %}
+							{% if pop.views != 0 %}
 							<li class="flex-wr-sb-s p-b-20">
-								<a href="#" class="size-w-4 wrap-pic-w hov1 trans-03">
-									<img src="images/popular-post-01.jpg" alt="IMG">
+								<a href="{%url 'news_detail' word=pop.title %}" class="size-w-4 wrap-pic-w hov1 trans-03">
+									<img src="{{pop.newsImageUrl}}" alt="IMG">
 								</a>
 
 								<div class="size-w-5">
 									<h6 class="p-b-5">
-										<a href="#" class="f1-s-5 cl11 hov-cl10 trans-03">
-											Donec metus orci, malesuada et lectus vitae
+										<a href="{%url 'news_detail' word=pop.title %}" class="f1-s-5 cl11 hov-cl10 trans-03">
+											{{pop.title}}
 										</a>
 									</h6>
 
 									<span class="f1-s-3 cl6">
-										Feb 17
+										{{pop.publishDate}}
 									</span>
 								</div>
 							</li>
-
-							<li class="flex-wr-sb-s p-b-20">
-								<a href="#" class="size-w-4 wrap-pic-w hov1 trans-03">
-									<img src="images/popular-post-02.jpg" alt="IMG">
-								</a>
-
-								<div class="size-w-5">
-									<h6 class="p-b-5">
-										<a href="#" class="f1-s-5 cl11 hov-cl10 trans-03">
-											Lorem ipsum dolor sit amet, consectetur
-										</a>
-									</h6>
-
-									<span class="f1-s-3 cl6">
-										Feb 16
-									</span>
-								</div>
-							</li>
-
-							<li class="flex-wr-sb-s p-b-20">
-								<a href="#" class="size-w-4 wrap-pic-w hov1 trans-03">
-									<img src="images/popular-post-03.jpg" alt="IMG">
-								</a>
-
-								<div class="size-w-5">
-									<h6 class="p-b-5">
-										<a href="#" class="f1-s-5 cl11 hov-cl10 trans-03">
-											Suspendisse dictum enim quis imperdiet auctor
-										</a>
-									</h6>
-
-									<span class="f1-s-3 cl6">
-										Feb 15
-									</span>
-								</div>
-							</li>
+							{% endif %}
+							{% endfor %}
 						</ul>
 					</div>
 

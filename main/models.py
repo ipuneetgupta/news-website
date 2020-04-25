@@ -6,6 +6,7 @@ from django.db import models
 class Main(models.Model):
     titleName = models.CharField(default="#",max_length=100)
     about = models.TextField(default="#")
+    aboutText = models.TextField(default=" ")
     fb = models.CharField(default="#", max_length=300)
     tw = models.CharField(default="#", max_length=300)
     yt = models.CharField(default="#", max_length=300)
@@ -18,6 +19,7 @@ class Main(models.Model):
     imageName = models.TextField(default=" ")
     imageUrl1 = models.TextField(default=" ")
     imageName1 = models.TextField(default=" ")
+
 
 
     

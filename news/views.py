@@ -5,6 +5,7 @@ from django.core.files.storage import FileSystemStorage
 import datetime
 from subcat.models import SubCat
 from cat.models import Cat
+from trending.models import Trending
 # Create your views here.
 def news_detail(request,word):
 
@@ -13,10 +14,41 @@ def news_detail(request,word):
         return redirect('mylogin')
     #adminlogin end
 
-    cat = Cat.objects.all()
     site = Main.objects.get(pk=4)
+    news = News.objects.all().order_by('-pk')
+    cat = Cat.objects.all()
+    subcat = SubCat.objects.all()
+    last3news = News.objects.all().order_by('-pk')[:3]
+    popnews =  News.objects.all().order_by('-views')
+    pop3news =  News.objects.all().order_by('-views')[:3]
+    trending = Trending.objects.all().order_by('-pk')[:5]
+
+    #tag
+    if len( News.objects.filter(title=word)) != 0:
+        shownews = News.objects.get(title=word)
+        tags = shownews.tag
+        if tags == ' ':
+            tags = tags + str(shownews.catName)+","+"News"
+
+        tags = tags.split(',')
+
+    else: return render(request,'front/error.html')
+    #endtag
+
+    #viewupdate
+    try:
+
+        b = News.objects.get(title=word)
+        b.views = b.views + 1
+        b.save()
+
+    except :
+        pass
+    #endviewupdate
+       
     shownews = News.objects.filter(title=word)
-    return render(request,'front/news_detail.html',{'shownews':shownews,'site':site,'cat':cat})
+
+    return render(request,'front/news_detail.html',{'shownews':shownews,'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'subcat':subcat,'news':news,'tags':tags,'trending':trending})
 
 def news_list(request):
 
@@ -60,6 +92,7 @@ def add_news(request):
         newsContent = request.POST.get("NewsContent")
         writerName = request.POST.get("writerName")
         catId = request.POST.get("newsCat")
+        tag = request.POST.get("tag")
         
         if titleNews==""  or shortTxt == "" or newsContent == "" or writerName == "":
             error_msg = "error ! u need to fill all fields of form"
@@ -77,8 +110,10 @@ def add_news(request):
 
                     if publishDate=="":
                         publishDate+= currDate+" | "+currTime
-
-                    news = News(ocatId=ocatId,title=titleNews,newsSummary=shortTxt,newsContent=newsContent,writerName=writerName,catName=catName,catId=catId,views=0,newsImageUrl=url,publishDate=publishDate,newsImageName=filename)
+                    if tag == "":
+                        tag = tag + str(catName)
+                    
+                    news = News(ocatId=ocatId,title=titleNews,newsSummary=shortTxt,newsContent=newsContent,writerName=writerName,catName=catName,catId=catId,views=0,newsImageUrl=url,publishDate=publishDate,newsImageName=filename,tag=tag)
                     news.save()
 
                     count = len(News.objects.filter(ocatId=ocatId)) 
@@ -165,7 +200,8 @@ def news_edit(request,pk):
         newsContent = request.POST.get("NewsContent")
         writerName = request.POST.get("writerName")
         catId = request.POST.get("newsCat")
-        
+        tag = request.POST.get("tag")
+
         if titleNews==""  or shortTxt == "" or newsContent == "" or writerName == "":
             error_msg = "error ! u need to fill all fields of form"
             return render(request,'back/error.html',{'error':error_msg})
@@ -201,6 +237,7 @@ def news_edit(request,pk):
                     b.writerName=writerName
                     b.catId = catId
                     b.ocatId = ocatId
+                    b.tag = tag
 
                     b.save()
 
@@ -236,6 +273,7 @@ def news_edit(request,pk):
             b.writerName=writerName
             b.catId = catId
             b.ocatId = ocatId
+            b.tag = tag
             b.save()
 
             count = len(News.objects.filter(ocatId=ocatId)) 

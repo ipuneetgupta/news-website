@@ -1,0 +1,96 @@
+{% extends 'back/master.html' %}
+{% load static %}
+
+{% block headerblock %}
+<script src="{%static 'ckeditor/ckeditor.js' %}"></script>
+<!-- <script src="https://cdn.ckeditor.com/ckeditor5/18.0.0/classic/ckeditor.js"></script> -->
+{% endblock %}
+
+{% block mainblock %}
+<!-- Page content -->
+<div id="page-content">
+    <!-- Datatables Header -->
+    <div class="content-header">
+        <div class="header-section">
+            <h1>
+                <i class="fa fa-table"></i>Trending news<br><small>You can add ,edit, and delete new Trending news
+                </small>
+            </h1>
+        </div>
+    </div>
+    <ul class="breadcrumb breadcrumb-top">
+        <li>TrendingNews</li>
+        <li><a href="/panel/trending/add/">Add</a></li>
+    </ul>
+    <!-- END Datatables Header -->
+</div>
+<!-- END Page Content -->
+<div class="row">
+    <div class="col-md-12">
+        <!-- Input Grid Block -->
+        <div class="block">
+            <!-- Input Grid Title -->
+            <div class="block-title">
+                <h2>Trending News<h2>
+            </div>
+            <!-- END Input Grid Title -->
+
+            <!-- Input Grid Content -->
+            <form action="{%url 'trending_add' %}" method="post" class="form-horizontal form-bordered"
+                enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <input type="text" id="trendingnews" name='trendingnews' class="form-control"
+                            placeholder="Trending News" required>
+                    </div>
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-angle-right"></i>
+                            Submit</button>
+                    </div>
+                </div>
+            </form>
+            <!-- END Input Grid Content -->
+        </div>
+        <!-- END Input Grid Block -->
+    </div>
+</div>
+ <!-- Datatables Content -->
+ <div class="block full">
+    <div class="block-title">
+        <h2><strong>Trending News</strong> List</h2>
+    </div>
+    <div class="table-responsive">
+        <table id="example-datatable" class="table table-vcenter table-condensed table-bordered">
+            <thead>
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th>Title</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in trendinglist %}
+                <tr>
+                    <td class="text-center">{{c.pk}}</td>
+                    <td>{{c.title}}</td>
+                    <td class="text-center">
+                        <div class="btn-group">
+                            <a href="{%url 'trending_edit' pk=c.pk %}" data-toggle="tooltip" title="Edit"
+                                class="btn btn-xs btn-default"><i class="fa fa-pencil"></i>Edit</a>
+                            <a href="{%url 'trending_del' pk=c.pk %}" data-toggle="tooltip" title="Delete"
+                                class="btn btn-xs btn-danger"><i class="fa fa-times"></i>Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block footerblock %}
+<script src="{%static 'back/js/pages/tablesDatatables.js'%}"></script>
+<script>$(function () { TablesDatatables.init(); });</script>
+{% endblock %}

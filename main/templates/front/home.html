@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block headblock %}
-<title>{{site.titleName}}</title>
+<title>{{site.titleName}}|Home</title>
 {%  endblock %}
 
 {% block mainblock%}
@@ -21,14 +21,15 @@
 					</a>
 
 					<h3 class="how1-child2 m-t-14 m-b-10">
-						<a href="{%url 'news_detail' word=lastnews.title %}" class="f1-l-1 cl0 hov-cl10 trans-03 respon1">
+						<a href="{%url 'news_detail' word=lastnews.title %}"
+							class="f1-l-1 cl0 hov-cl10 trans-03 respon1">
 							{{lastnews.title}}
 						</a>
 					</h3>
 				</div>
 			</div>
 		</div>
-        {% endfor %}
+		{% endfor %}
 	</div>
 </section>
 
@@ -55,13 +56,15 @@
 								{% for ab in news %}
 								{% if newscat.pk == ab.ocatId %}
 								<div class="flex-wr-sb-s m-b-30">
-									<a href="{%url 'news_detail' word=ab.title %}" class="size-w-1 wrap-pic-w hov1 trans-03">
+									<a href="{%url 'news_detail' word=ab.title %}"
+										class="size-w-1 wrap-pic-w hov1 trans-03">
 										<img src="{{ab.newsImageUrl}}" alt="IMG">
 									</a>
 
 									<div class="size-w-2">
 										<h5 class="p-b-5">
-											<a href="blog-detail-02.html" class="f1-s-5 cl3 hov-cl10 trans-03">
+											<a href="{%url 'news_detail' word=ab.title %}"
+												class="f1-s-5 cl3 hov-cl10 trans-03">
 												{{ab.title}}
 											</a>
 										</h5>
@@ -87,21 +90,26 @@
 
 							<div class="col-sm-6 p-r-25 p-r-15-sr991">
 								<!-- Item post -->
+								{% for pop in popnews %}
+								{% if pop.views != 0 %}
+								{% if newscat.pk == pop.ocatId %}
 								<div class="flex-wr-sb-s m-b-30">
-									<a href="blog-detail-02.html" class="size-w-1 wrap-pic-w hov1 trans-03">
-										<img src="images/post-03.jpg" alt="IMG">
+									<a href="{%url 'news_detail' word=pop.title %}"
+										class="size-w-1 wrap-pic-w hov1 trans-03">
+										<img src="{{pop.newsImageUrl}}" alt="IMG">
 									</a>
 
 									<div class="size-w-2">
 										<h5 class="p-b-5">
-											<a href="blog-detail-02.html" class="f1-s-5 cl3 hov-cl10 trans-03">
-												Donec metus orci, malesuada et lectus vitae
+											<a href="{%url 'news_detail' word=pop.title %}"
+												class="f1-s-5 cl3 hov-cl10 trans-03">
+												{{pop.title}}
 											</a>
 										</h5>
 
 										<span class="cl8">
 											<a href="#" class="f1-s-6 cl8 hov-cl10 trans-03">
-												Beachs
+												{{pop.catName}}
 											</a>
 
 											<span class="f1-s-3 m-rl-3">
@@ -109,69 +117,14 @@
 											</span>
 
 											<span class="f1-s-3">
-												Feb 17
+												{{pop.publishDate}}
 											</span>
 										</span>
 									</div>
 								</div>
-
-								<!-- Item post -->
-								<div class="flex-wr-sb-s m-b-30">
-									<a href="blog-detail-02.html" class="size-w-1 wrap-pic-w hov1 trans-03">
-										<img src="images/post-27.jpg" alt="IMG">
-									</a>
-
-									<div class="size-w-2">
-										<h5 class="p-b-5">
-											<a href="blog-detail-02.html" class="f1-s-5 cl3 hov-cl10 trans-03">
-												Donec metus orci, malesuada et lectus vitae
-											</a>
-										</h5>
-
-										<span class="cl8">
-											<a href="#" class="f1-s-6 cl8 hov-cl10 trans-03">
-												Flight
-											</a>
-
-											<span class="f1-s-3 m-rl-3">
-												-
-											</span>
-
-											<span class="f1-s-3">
-												Feb 16
-											</span>
-										</span>
-									</div>
-								</div>
-
-								<!-- Item post -->
-								<div class="flex-wr-sb-s m-b-30">
-									<a href="blog-detail-02.html" class="size-w-1 wrap-pic-w hov1 trans-03">
-										<img src="images/post-27.jpg" alt="IMG">
-									</a>
-
-									<div class="size-w-2">
-										<h5 class="p-b-5">
-											<a href="blog-detail-02.html" class="f1-s-5 cl3 hov-cl10 trans-03">
-												Donec metus orci, malesuada et lectus vitae
-											</a>
-										</h5>
-
-										<span class="cl8">
-											<a href="#" class="f1-s-6 cl8 hov-cl10 trans-03">
-												Flight
-											</a>
-
-											<span class="f1-s-3 m-rl-3">
-												-
-											</span>
-
-											<span class="f1-s-3">
-												Feb 16
-											</span>
-										</span>
-									</div>
-								</div>
+								{% endif %}
+								{% endif %}
+								{% endfor %}
 							</div>
 						</div>
 					</div>
@@ -200,7 +153,8 @@
 				<!-- Item latest -->
 				<div class="m-b-45">
 					<a href="{%url 'news_detail' word=i.title %}" class="wrap-pic-w hov1 trans-03">
-						<img src="{{i.newsImageUrl}}" style="display: inline-block; width: 330px; height: 240px;" alt="IMG">
+						<img src="{{i.newsImageUrl}}" style="display: inline-block; width: 330px; height: 240px;"
+							alt="IMG">
 					</a>
 
 					<div class="p-t-16">

@@ -45,7 +45,7 @@
     <!-- The themes stylesheet of this template (for using specific theme color in individual elements - must included last) -->
     <link rel="stylesheet" href="{%static 'back/css/themes.css'%}">
     <!-- END Stylesheets -->
-     
+
     {% block headerblock %}
     {% endblock %}
     <!-- Modernizr (browser feature detection library) -->
@@ -132,8 +132,8 @@
                                 <a href="page_ready_inbox.html" data-toggle="tooltip" data-placement="bottom"
                                     title="Messages"><i class="gi gi-envelope"></i></a>
                                 <!-- Opens the user settings modal that can be found at the bottom of each page (page_footer.html in PHP version) -->
-                                <a href="javascript:void(0)" class="enable-tooltip" data-placement="bottom"
-                                    title="Settings" onclick="$('#modal-user-settings').modal('show');"><i
+                                <a href="/panel/change/pass" class="enable-tooltip" data-placement="bottom"
+                                    title="Reset Password"><i
                                         class="gi gi-cogwheel"></i></a>
                                 <a href="/logout" data-toggle="tooltip" data-placement="bottom" title="Logout"><i
                                         class="gi gi-exit"></i></a>
@@ -157,8 +157,15 @@
                                 <span class="sidebar-header-title">site Setting</span>
                             </li>
                             <li>
-                                <a href="/panel/setting/" ><i class= "gi gi-show_big_thumbnails sidebar-nav-icon"></i><span
+                                <a href="/panel/setting/"><i
+                                        class="gi gi-show_big_thumbnails sidebar-nav-icon"></i><span
                                         class="sidebar-nav-mini-hide">Site Setting</span></a>
+                                <a href="/panel/about/setting/"><i
+                                        class="gi gi-show_big_thumbnails sidebar-nav-icon"></i><span
+                                        class="sidebar-nav-mini-hide">About Setting</span></a>
+                                <a href="/panel/contactform/"><i
+                                        class="gi gi-show_big_thumbnails sidebar-nav-icon"></i><span
+                                        class="sidebar-nav-mini-hide">Contact Form</span></a>
                             </li>
                             <li class="sidebar-header">
                                 <span class="sidebar-header-title">News Section</span>
@@ -206,7 +213,12 @@
                                     </li>
                                 </ul>
                             </li>
-
+                            <li>
+                                <a href="/panel/trending/add"><i
+                                    class="gi gi-show_big_thumbnails sidebar-nav-icon"></i><span
+                                    class="sidebar-nav-mini-hide">Trending</span></a>
+                            </li>
+                            
 
                         </ul>
                         <!-- END Sidebar Navigation -->
