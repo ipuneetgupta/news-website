@@ -1,0 +1,74 @@
+{% extends 'back/master.html' %}
+{% load static %}
+
+
+{% block mainblock %}
+<!-- Page content -->
+<div id="page-content">
+    <!-- Datatables Header -->
+    <div class="content-header">
+        <div class="header-section">
+            <h1>
+                <i class="fa fa-table"></i>ManagerList<br><small>u can edit ,delete or add new User in list in this
+                    Managerlist</small>
+            </h1>
+        </div>
+    </div>
+    <ul class="breadcrumb breadcrumb-top">
+        <li>Manager</li>
+        <li><a href="/panel/manager/list">Lists</a></li>
+    </ul>
+    <!-- END Datatables Header -->
+
+    <!-- Datatables Content -->
+    <div class="block full">
+        <div class="block-title">
+            <h2><strong>News</strong> List</h2>
+        </div>
+        <div class="table-responsive">
+            <table id="example-datatable" class="table table-vcenter table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">ID</th>
+                        <th>Name</th>
+                        <th>UserName</th>
+                        <th>Email</th>
+
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in managerlist %}
+                    <tr>
+                        <td class="text-center">{{c.pk}}</td>
+                        <td>{{c.name}}</td>
+                        <td>{{c.u_name}}</td>
+                        <td>{{c.e_mail}}</td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <a href="{%url 'users_groups' pk=c.pk %}" data-toggle="tooltip" title="Edit"
+                                    class="btn btn-xs btn-default"><i class="fa fa-pencil"></i>Group</a>
+
+                                <a href="{%url 'manager_del' pk=c.pk %}" data-toggle="tooltip" title="Delete"
+                                    class="btn btn-xs btn-danger"><i class="fa fa-times"></i>Delete</a>
+                                <a href="{%url 'users_perms' pk=c.pk %}" data-toggle="tooltip" title="Permission"
+                                    class="btn btn-xs btn-default"><i class="fa fa-pencil"></i>Permission</a>
+
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- END Datatables Content -->
+</div>
+<!-- END Page Content -->
+
+{% endblock %}
+
+{% block footerblock %}
+<script src="{%static 'back/js/pages/tablesDatatables.js'%}"></script>
+<script>$(function () { TablesDatatables.init(); });</script>
+{% endblock %}

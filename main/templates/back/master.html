@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 {% load static %}
+{% load extra_auth %}
+
 
 {% if user.is_authenticated %}
 <!--[if IE 9]>         <html class="no-js lt-ie10" lang="en"> <![endif]-->
@@ -125,7 +127,7 @@
                                     <img src="img/placeholders/avatars/avatar2.jpg" alt="avatar">
                                 </a>
                             </div>
-                            <div class="sidebar-user-name">Admin</div>
+                            <div class="sidebar-user-name">{{request.user}}</div>
                             <div class="sidebar-user-links">
                                 <a href="page_ready_user_profile.html" data-toggle="tooltip" data-placement="bottom"
                                     title="Profile"><i class="gi gi-user"></i></a>
@@ -133,8 +135,7 @@
                                     title="Messages"><i class="gi gi-envelope"></i></a>
                                 <!-- Opens the user settings modal that can be found at the bottom of each page (page_footer.html in PHP version) -->
                                 <a href="/panel/change/pass" class="enable-tooltip" data-placement="bottom"
-                                    title="Reset Password"><i
-                                        class="gi gi-cogwheel"></i></a>
+                                    title="Reset Password"><i class="gi gi-cogwheel"></i></a>
                                 <a href="/logout" data-toggle="tooltip" data-placement="bottom" title="Logout"><i
                                         class="gi gi-exit"></i></a>
                             </div>
@@ -145,10 +146,15 @@
 
                         <!-- Sidebar Navigation -->
                         <ul class="sidebar-nav">
+                            {% if perms.main.master_user %}
+
                             <li>
                                 <a href="/panel" class=" active"><i class="gi gi-stopwatch sidebar-nav-icon"></i><span
                                         class="sidebar-nav-mini-hide">Dashboard</span></a>
                             </li>
+                            {% endif %}
+
+                            {% if request.user|has_group:"masteruser" %}
 
                             <li class="sidebar-header">
                                 <span class="sidebar-header-options clearfix"><a href="/panel/setting/"
@@ -167,9 +173,39 @@
                                         class="gi gi-show_big_thumbnails sidebar-nav-icon"></i><span
                                         class="sidebar-nav-mini-hide">Contact Form</span></a>
                             </li>
+                            </li>
+
+                            <li class="sidebar-header">
+                                <span class="sidebar-header-title">Permission</span>
+                            </li>
+                            <li>
+                            <li>
+                                <a href="/panel/manager/group"><i
+                                        class="gi gi-show_big_thumbnails sidebar-nav-icon"></i><span
+                                        class="sidebar-nav-mini-hide">Group</span></a>
+                            </li>
+                            <li>
+                                <a href="/panel/manager/perms"><i
+                                        class="gi gi-show_big_thumbnails sidebar-nav-icon"></i><span
+                                        class="sidebar-nav-mini-hide">Permission</span></a>
+                            </li>
+
+                            <li class="sidebar-header">
+                                <span class="sidebar-header-title">Manager</span>
+                            </li>
+                            <li>
+                            <li>
+                                <a href="/panel/manager/list"><i
+                                        class="gi gi-show_big_thumbnails sidebar-nav-icon"></i><span
+                                        class="sidebar-nav-mini-hide">ManagerList</span></a>
+                            </li>
+                            {% endif %}
+
                             <li class="sidebar-header">
                                 <span class="sidebar-header-title">News Section</span>
                             </li>
+                            {% if request.user|has_group:"masteruser" %}
+
                             <li>
                             <li>
                                 <a href="#" class="sidebar-nav-menu"><i
@@ -199,6 +235,8 @@
                                     </li>
                                 </ul>
                             </li>
+                            {% endif %}
+
                             <li>
                                 <a href="#" class="sidebar-nav-menu"><i
                                         class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i
@@ -213,12 +251,15 @@
                                     </li>
                                 </ul>
                             </li>
+                            {% if request.user|has_group:"masteruser" %}
+
                             <li>
                                 <a href="/panel/trending/add"><i
-                                    class="gi gi-show_big_thumbnails sidebar-nav-icon"></i><span
-                                    class="sidebar-nav-mini-hide">Trending</span></a>
+                                        class="gi gi-show_big_thumbnails sidebar-nav-icon"></i><span
+                                        class="sidebar-nav-mini-hide">Trending</span></a>
                             </li>
-                            
+                            {% endif %}
+
 
                         </ul>
                         <!-- END Sidebar Navigation -->

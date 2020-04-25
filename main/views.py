@@ -8,7 +8,8 @@ from django.core.files.storage import FileSystemStorage
 from trending.models import Trending
 import random
 from random import randint
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group,Permission
+from manager.models import Manager
 # Create your views here.
 
 def home(request):
@@ -37,10 +38,23 @@ def about(request):
     return render(request,'front/about.html',{'site':site,'cat':cat,'subcat':subcat,'news':news,'pop3news':pop3news,'trending':trending})
 
 def panel(request):
+
     #adminlogin start
     if not request.user.is_authenticated:
         return redirect('mylogin')
     #adminlogin end
+    
+    # #User permission for access for master-user
+    # perm = 0
+    # perms = Permission.objects.filter(user=request.user)
+    # for i in perms:
+    #     if i.codename == 'master_user':
+    #         perm = 1
+    # if perm == 0:
+    #     error_msg = "Access Denied !"
+    #     return render(request,'back/error.html',{'error':error_msg})
+    # #end
+
     return render(request,'back/panel.html')
 
 def mylogin(request):
@@ -60,7 +74,8 @@ def myregister(request):
     site = Main.objects.get(pk=4)
 
     if request.method == "POST":
-
+        
+        name = request.POST.get('name')
         username = request.POST.get('username')
         email = request.POST.get('email')
         password1 = request.POST.get('password1')
@@ -97,6 +112,8 @@ def myregister(request):
 
         if len(User.objects.filter(username=username)) == 0 and len(User.objects.filter(email=email))==0:
             user = User.objects.create_user(username=username,email=email,password=password1) 
+            b = Manager(name=name,e_mail=email,u_name=username)
+            b.save()
         else:
             msg = "Username or email Already Exist !"
             return render(request,'front/msgbox.html',{'msg':msg,'site':site})
@@ -108,6 +125,17 @@ def mylogout(request):
     return redirect('mylogin')
 
 def site_setting(request):
+
+     #permission for access for masteruser
+    perm = 0
+    for i in request.user.groups.all():
+        if i.name == 'masteruser':
+            perm = 1
+    if perm == 0:
+        error_msg = "Access Denied !"
+        return render(request,'back/error.html',{'error':error_msg})
+    #end
+
      #adminlogin start
     if not request.user.is_authenticated:
         return redirect('mylogin')
@@ -184,6 +212,16 @@ def site_setting(request):
     return render(request,'back/setting.html',{'site':site})
 
 def about_setting(request):
+
+     #permission for access for masteruser
+    perm = 0
+    for i in request.user.groups.all():
+        if i.name == 'masteruser':
+            perm = 1
+    if perm == 0:
+        error_msg = "Access Denied !"
+        return render(request,'back/error.html',{'error':error_msg})
+    #end
     
     #adminlogin start
     if not request.user.is_authenticated:

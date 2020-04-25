@@ -1,0 +1,100 @@
+{% extends 'back/master.html' %}
+{% load static %}
+
+
+{% block mainblock %}
+<!-- Page content -->
+<div id="page-content">
+    <!-- Datatables Header -->
+    <div class="content-header">
+        <div class="header-section">
+            <h1>
+                <i class="fa fa-table"></i>UserGroup<br><small>u can edit ,delete or add new Group in list in this
+                    Userlist</small>
+            </h1>
+        </div>
+    </div>
+    <ul class="breadcrumb breadcrumb-top">
+        <li>Group</li>
+        <li><a href="/panel/manager/show/{{pk}}">Lists</a></li>
+    </ul>
+    <!-- END Datatables Header -->
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Input Grid Block -->
+            <div class="block">
+                <!-- Input Grid Title -->
+                <div class="block-title">
+                    <h2>Add User to group<h2>
+                </div>
+                <!-- END Input Grid Title -->
+
+                <!-- Input Grid Content -->
+                <form action="{%url 'add_users_to_groups' pk=pk %}" method="post" class="form-horizontal form-bordered"
+                    enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <select id="gname" name="gname" class="select-chosen"
+                                data-placeholder="Chosse a Group.." style="width: 250px;">
+                                <option value="{{news.catId}}">{{news.catName}}</option>
+                                {% for c in grouplist %}
+                                <option value="{{c.name}}">{{c.name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-angle-right"></i>
+                                Submit</button>
+                        </div>
+                    </div>
+                </form>
+                <!-- END Input Grid Content -->
+            </div>
+            <!-- END Input Grid Block -->
+        </div>
+    </div>
+
+    <!-- Datatables Content -->
+    <div class="block full">
+        <div class="block-title">
+            <h2><strong>Group</strong> List</h2>
+        </div>
+        <div class="table-responsive">
+            <table id="example-datatable" class="table table-vcenter table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+
+
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in userlist %}
+                    <tr>
+                        <td>{{c}}</td>
+                        <td class="text-center">
+                            <div class="btn-group">
+                                <a href="{%url 'del_users_to_groups' name=c pk=pk %}" data-toggle="tooltip" title="Delete"
+                                    class="btn btn-xs btn-danger"><i class="fa fa-times"></i>Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- END Datatables Content -->
+</div>
+<!-- END Page Content -->
+
+{% endblock %}
+
+{% block footerblock %}
+<script src="{%static 'back/js/pages/tablesDatatables.js'%}"></script>
+<script>$(function () { TablesDatatables.init(); });</script>
+{% endblock %}
