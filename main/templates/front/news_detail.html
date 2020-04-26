@@ -6,8 +6,10 @@
 
 
 {% block mainblock %}
+{% for i in shownews %}
 
 <!-- Breadcrumb -->
+
 <div class="container">
     <div class="headline bg0 flex-wr-sb-c p-rl-20 p-tb-8">
         <div class="f2-s-1 p-r-30 m-tb-6">
@@ -18,10 +20,9 @@
             <a href="#" class="breadcrumb-item f1-s-3 cl9">
                 News
             </a>
-
-            <span class="breadcrumb-item f1-s-3 cl9">
-                Nulla non interdum metus non laoreet nisi tellus eget aliquam lorem pellentesque
-            </span>
+            <a href="{%url 'news_detail_shorturl' randNum=i.rand %}" class="breadcrumb-item f1-s-3 cl9">
+                {{i.title}}
+            </a>
         </div>
 
         <div class="pos-relative size-a-2 bo-1-rad-22 of-hidden bocl11 m-tb-6">
@@ -34,7 +35,6 @@
 </div>
 
 <!-- Content -->
-{% for i in shownews %}
 
 <section class="bg0 p-b-140 p-t-10">
     <div class="container">
@@ -93,11 +93,7 @@
 
                             <div class="flex-wr-s-s size-w-0">
                                 <a href="#" class="f1-s-12 cl8 hov-link1 m-r-15">
-                                    Streetstyle
-                                </a>
-
-                                <a href="#" class="f1-s-12 cl8 hov-link1 m-r-15">
-                                    Crafts
+                                    {{i.catName}}
                                 </a>
                             </div>
                         </div>
@@ -105,7 +101,47 @@
 
                     </div>
 
+                    <!-- comments -->
+
+                    {% if iscommentPresent %}
+
+                    <div>
+                        <div class="how2 how2-cl4 flex-s-c m-b-30">
+
+                            <h4 class="f1-l-4 cl3 p-b-12">
+                                 Comment
+                            </h4>
+                        </div>
+                        {% for cm in cms %}
+
+                        <div class="flex-wr-s-s m-rl--5">
+                            <h3 style="text-align: justify;" class="f1-m-2 cl3 tab01-title">
+                                {{cm.cm}}
+                            </h3>
+                        </div>
+                        <div class="flex-wr-s-s p-b-40">
+                            <span class="f1-s-3 cl8 m-r-15">
+                                <a href="#" class="f1-s-4 cl8 hov-cl10 trans-03">
+                                    by {{cm.uname}}
+                                </a>
+
+                                <span class="m-rl-3">-</span>
+
+                                <span>
+                                    {{cm.date}}
+                                </span>
+                            </span>
+                        </div>
+
+                        {% endfor %}
+                    </div>
+                    </br>
+                    </br>
+
+                    {% endif %}
+
                     <!-- Leave a comment -->
+
                     <div>
                         <h4 class="f1-l-4 cl3 p-b-12">
                             Leave a Comment
@@ -114,8 +150,22 @@
                         <p class="f1-s-13 cl8 p-b-40">
                             Your email address will not be published. Required fields are marked *
                         </p>
+                        {% if user.is_authenticated %}
 
-                        <form>
+                        <form action="{%url 'cm_add_news' pk=i.pk %}" id="comment1" method="post"
+                            enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <textarea class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20"
+                                name="msg" placeholder="Comment..."></textarea>
+
+                            <button type="submit"
+                                class="size-a-17 bg2 borad-3 f1-s-12 cl0 hov-btn1 trans-03 p-rl-15 m-t-10">
+                                Post Comment
+                            </button>
+                        </form>
+                        {% else %}
+                        <form action="{%url 'cm_add_news' pk=i.pk %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
                             <textarea class="bo-1-rad-3 bocl13 size-a-15 f1-s-13 cl5 plh6 p-rl-18 p-tb-14 m-b-20"
                                 name="msg" placeholder="Comment..."></textarea>
 
@@ -125,14 +175,14 @@
                             <input class="bo-1-rad-3 bocl13 size-a-16 f1-s-13 cl5 plh6 p-rl-18 m-b-20" type="text"
                                 name="email" placeholder="Email*">
 
-                            <input class="bo-1-rad-3 bocl13 size-a-16 f1-s-13 cl5 plh6 p-rl-18 m-b-20" type="text"
-                                name="website" placeholder="Website">
-
                             <button class="size-a-17 bg2 borad-3 f1-s-12 cl0 hov-btn1 trans-03 p-rl-15 m-t-10">
                                 Post Comment
                             </button>
+
                         </form>
+                        {% endif %}
                     </div>
+
                 </div>
             </div>
 
@@ -168,19 +218,21 @@
                                 Popular Post
                             </h3>
                         </div>
-                       
+
                         <ul class="p-t-35">
                             {% for pop in popnews %}
                             {% if pop.views != 0 %}
                             {% if pop.ocatId == i.ocatId %}
                             <li class="flex-wr-sb-s p-b-30">
-                                <a href="{% url 'news_detail' word=pop.title %}" class="size-w-10 wrap-pic-w hov1 trans-03">
+                                <a href="{% url 'news_detail' word=pop.title %}"
+                                    class="size-w-10 wrap-pic-w hov1 trans-03">
                                     <img src="{{pop.newsImageUrl}}" alt="IMG">
                                 </a>
 
                                 <div class="size-w-11">
                                     <h6 class="p-b-4">
-                                        <a href="{% url 'news_detail' word=pop.title %}" class="f1-s-5 cl3 hov-cl10 trans-03">
+                                        <a href="{% url 'news_detail' word=pop.title %}"
+                                            class="f1-s-5 cl3 hov-cl10 trans-03">
                                             {{pop.title}}
                                         </a>
                                     </h6>
@@ -203,7 +255,7 @@
                             {% endif %}
                             {% endif %}
                             {% endfor %}
-                        </ul>    
+                        </ul>
                     </div>
 
                     <!-- Tag -->

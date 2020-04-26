@@ -6,14 +6,12 @@ import datetime
 from subcat.models import SubCat
 from cat.models import Cat
 from trending.models import Trending
+from django.contrib import messages
+from comment.models import Comment
+import random
 # Create your views here.
 def news_detail(request,word):
-
-     #adminlogin start
-    if not request.user.is_authenticated:
-        return redirect('mylogin')
-    #adminlogin end
-
+  
     site = Main.objects.get(pk=4)
     news = News.objects.all().order_by('-pk')
     cat = Cat.objects.all()
@@ -47,6 +45,51 @@ def news_detail(request,word):
     #endviewupdate
        
     shownews = News.objects.filter(title=word)
+    code = News.objects.get(title=word)
+    
+    cms = Comment.objects.filter(newsId=code.pk,status=1).order_by('-pk')[:3]
+
+    iscommentPresent = 0
+    if len(cms) !=0 :
+        iscommentPresent = 1
+    
+    return render(request,'front/news_detail.html',{'shownews':shownews,'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'subcat':subcat,'news':news,'tags':tags,'trending':trending,'cms':cms,'iscommentPresent':iscommentPresent})
+
+def news_detail_shorturl(request,randNum):
+
+    site = Main.objects.get(pk=4)
+    news = News.objects.all().order_by('-pk')
+    cat = Cat.objects.all()
+    subcat = SubCat.objects.all()
+    last3news = News.objects.all().order_by('-pk')[:3]
+    popnews =  News.objects.all().order_by('-views')
+    pop3news =  News.objects.all().order_by('-views')[:3]
+    trending = Trending.objects.all().order_by('-pk')[:5]
+
+    #tag
+    if len( News.objects.filter(rand=randNum)) != 0:
+        shownews = News.objects.get(rand=randNum)
+        tags = shownews.tag
+        if tags == '':
+            tags = tags + str(shownews.catName)+","+"News"
+
+        tags = tags.split(',')
+
+    else: return render(request,'front/error.html')
+    #endtag
+
+    #viewupdate
+    try:
+
+        b = News.objects.get(rand=randNum)
+        b.views = b.views + 1
+        b.save()
+
+    except :
+        pass
+    #endviewupdate
+       
+    shownews = News.objects.filter(rand=randNum)
 
     return render(request,'front/news_detail.html',{'shownews':shownews,'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'subcat':subcat,'news':news,'tags':tags,'trending':trending})
 
@@ -57,7 +100,17 @@ def news_list(request):
         return redirect('mylogin')
     #adminlogin end
 
-    news = News.objects.all()
+    #permission for access for masteruser of newslist editor delete
+    perm = 0
+    for i in request.user.groups.all():
+        if i.name == 'masteruser':
+            perm = 1
+    if perm == 0:
+         news = News.objects.filter(publisherName=request.user)
+    elif perm == 1:
+         news = News.objects.all()
+    #end
+         
     return render(request,'back/news_list.html',{'news':news})
 
 def add_news(request):
@@ -66,6 +119,18 @@ def add_news(request):
     if not request.user.is_authenticated:
         return redirect('mylogin')
     #adminlogin end
+
+     #permission for access for masteruser of newslist editor delete
+    perm = 0
+    for i in request.user.groups.all():
+        if i.name == 'masteruser':
+            perm = 1
+    if perm == 0:
+        a = News.objects.get(pk=pk).publisherName
+        if str(a) != str(request.user):
+            error_msg = "Access Denied !"
+            return render(request,'back/error.html',{'error':error_msg})
+    #end
     
     # #datetime
     now = datetime.datetime.now()
@@ -82,6 +147,17 @@ def add_news(request):
     hr = str(now.hour)
     min = str(now.minute)
     currTime = hr+":"+min
+
+    #random No Generator
+    randhelper = day+month+year+hr+min
+    rand =  str(random.randint(1000,9999))
+    rand = int(rand + randhelper)
+    
+    while(len(News.objects.filter(rand = rand))!=0):
+        randhelper = day+month+year+hr+min
+        rand =  str(random.randint(1000,9999))
+        rand = int(rand + randhelper)
+    #end rand generator
 
     cat = SubCat.objects.all()
 
@@ -113,7 +189,7 @@ def add_news(request):
                     if tag == "":
                         tag = tag + str(catName)
                     
-                    news = News(ocatId=ocatId,title=titleNews,newsSummary=shortTxt,newsContent=newsContent,writerName=writerName,catName=catName,catId=catId,views=0,newsImageUrl=url,publishDate=publishDate,newsImageName=filename,tag=tag)
+                    news = News(ocatId=ocatId,title=titleNews,newsSummary=shortTxt,newsContent=newsContent,writerName=writerName,catName=catName,catId=catId,views=0,newsImageUrl=url,publishDate=publishDate,newsImageName=filename,tag=tag,publisherName=request.user,rand=rand)
                     news.save()
 
                     count = len(News.objects.filter(ocatId=ocatId)) 
@@ -145,6 +221,18 @@ def news_delete(request,pk):
         return redirect('mylogin')
     #adminlogin end
 
+    #permission for access for masteruser of newslist editor delete
+    perm = 0
+    for i in request.user.groups.all():
+        if i.name == 'masteruser':
+            perm = 1
+    if perm == 0:
+        a = News.objects.get(pk=pk).publisherName
+        if str(a) != str(request.user):
+            error_msg = "Access Denied !"
+            return render(request,'back/error.html',{'error':error_msg})
+    #end
+
     try:
         b = News.objects.get(pk=pk)
         fs = FileSystemStorage()
@@ -157,6 +245,7 @@ def news_delete(request,pk):
         p.save()  
 
         b.delete()
+        messages.success(request, 'Successfully News Is Delete !')
     except: 
         error_msg = "Something Wrong!!!"
         return render(request,'back/error.html',{'error':error_msg})
@@ -169,6 +258,18 @@ def news_edit(request,pk):
     if not request.user.is_authenticated:
         return redirect('mylogin')
     #adminlogin end
+
+     #permission for access for masteruser of newslist editor delete
+    perm = 0
+    for i in request.user.groups.all():
+        if i.name == 'masteruser':
+            perm = 1
+    if perm == 0:
+        a = News.objects.get(pk=pk).publisherName
+        if str(a) != str(request.user):
+            error_msg = "Access Denied !"
+            return render(request,'back/error.html',{'error':error_msg})
+    #end
     
     if len(News.objects.filter(pk=pk))==0:
         error_msg = "News Not Found!!!"
@@ -274,6 +375,7 @@ def news_edit(request,pk):
             b.catId = catId
             b.ocatId = ocatId
             b.tag = tag
+            b.act = 0
             b.save()
 
             count = len(News.objects.filter(ocatId=ocatId)) 
@@ -284,3 +386,28 @@ def news_edit(request,pk):
         return redirect('news_list')
 
     return render(request,'back/news_edit.html',{'pk':pk,'news':news,'cat':cat})
+
+def news_publish(request,pk):
+
+     #adminlogin start
+    if not request.user.is_authenticated:
+        return redirect('mylogin')
+    #adminlogin end
+
+     #permission for access for masteruser of newslist editor delete
+    perm = 0
+    for i in request.user.groups.all():
+        if i.name == 'masteruser':
+            perm = 1
+    if perm == 0:
+        a = News.objects.get(pk=pk).publisherName
+        if str(a) != str(request.user):
+            error_msg = "Access Denied !"
+            return render(request,'back/error.html',{'error':error_msg})
+    #end
+
+    b = News.objects.get(pk=pk)
+    b.act = 1
+    b.save()
+
+    return redirect('news_list')

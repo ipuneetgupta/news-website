@@ -36,6 +36,8 @@
                         <th>Date</th>
                         <th>Category</th>
                         <th>Writer</th>
+                        <th>Status</th>
+                        <th>Publisher Name</th>
                         <th>views</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -44,19 +46,29 @@
                     {% for c in news %}
                     <tr>
                         <td class="text-center">{{c.pk}}</td>
-                        <td class="text-center"><img style="display: inline-block; width: 50px; height: 50px;" src="{{c.newsImageUrl}}"
-                                alt="avatar" class="img-circle"></td>
+                        <td class="text-center"><img style="display: inline-block; width: 50px; height: 50px;"
+                                src="{{c.newsImageUrl}}" alt="avatar" class="img-circle"></td>
                         <td>{{c.title|safe}}</td>
                         <td>{{c.newsSummary|safe}}</td>
                         <td>{{c.publishDate}}</td>
                         <td>{{c.catName}}</td>
                         <td>{{c.writerName}}</td>
+                        {% if c.act == 0%}
+                        <td class="text-warning">pending</td>
+                        {% elif c.act == 1 %}
+                        <td class="text-success"> Published</td>
+                        {% endif %}
+                        <td>{{c.publisherName}}</td>
                         <td>{{c.views}}</td>
                         <td class="text-center">
                             <div class="btn-group">
                                 <a href="{%url 'news_edit' pk=c.pk %}" data-toggle="tooltip" title="Edit"
                                     class="btn btn-xs btn-default"><i class="fa fa-pencil"></i>Edit</a>
-                                <a href="{%url 'news_delete' pk=c.pk %}" data-toggle="tooltip" title="Delete"
+                                    {% if perms.main.master_user %}
+                                     <a href="{%url 'news_publish' pk=c.pk %}" data-toggle="tooltip" title="Publish"
+                                    class="btn btn-xs btn-success"><i class="fa fa-pencil"></i>Publish</a>
+                                    {% endif %}
+                                     <a href="{%url 'news_delete' pk=c.pk %}" data-toggle="tooltip" title="Delete"
                                     class="btn btn-xs btn-danger"><i class="fa fa-times"></i>Delete</a>
                             </div>
                         </td>

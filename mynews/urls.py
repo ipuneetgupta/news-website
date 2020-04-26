@@ -13,6 +13,9 @@ urlpatterns = [
     url(r"",include('contactform.urls')),
     url(r"",include('trending.urls')),
     url(r"",include('manager.urls')),
+    url(r"",include('newsletter.urls')),
+    url(r"",include('comment.urls')),
+
 
 ]
 

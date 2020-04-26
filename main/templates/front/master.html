@@ -28,6 +28,8 @@
 	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{%static 'front/css/main.css'%}">
 	<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{%static 'front/css/myfile.css'%}">
+
 </head>
 
 <body class="animsition">
@@ -52,7 +54,7 @@
 							<span class="dis-inline-block cl16 slide100-txt pos-relative size-w-0" data-in="fadeInDown"
 								data-out="fadeOutDown">
 								{% for t in trending %}
-								<span class="dis-inline-block slide100-txt-item animated visible-false">
+								<span class="dis-inline-block slide100-txt-item animated visible-false" style="text-align: justify;">
 									{{t.title}}
 								</span>
                                  {% endfor %}
@@ -105,8 +107,17 @@
 				</div>
 			</div>
 
+            <!-- start message tag -->
+			{% if messages %}
+			<ul class="messages">
+				   {% for message in messages %}
+						 <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+				   {% endfor %}
+			</ul>
+			{% endif %} 
+			<!-- end message appear -->
 
-
+			
 			<!--  -->
 			<div class="wrap-logo no-banner container">
 				<!-- Logo desktop -->
@@ -117,7 +128,7 @@
 							alt="LOGO"></a>
 				</div>
 			</div>
-
+			
 			<!--  -->
 			<div class="wrap-main-nav">
 				<div class="main-nav">
@@ -165,7 +176,7 @@
 														</a>
 
 														<div class="p-t-10">
-															<h5 class="p-b-5">
+															<h5 class="p-b-5" style="text-align: justify;">
 																<a href="{%url 'news_detail' word=x.title %}"
 																	class="f1-s-5 cl3 hov-cl10 trans-03"
 																	style="display: inline-block;">
@@ -210,7 +221,7 @@
 														</a>
 
 														<div class="p-t-10">
-															<h5 class="p-b-5">
+															<h5 class="p-b-5" style="text-align: justify;">
 																<a href="{%url 'news_detail' word=catnews.title %}"
 																	class="f1-s-5 cl3 hov-cl10 trans-03">
 																	{{catnews.title}}
@@ -271,7 +282,7 @@
 						</div>
 
 						<div>
-							<p class="f1-s-1 cl11 p-b-16">
+							<p class="f1-s-1 cl11 p-b-16" style="text-align: justify;">
 								{{site.about}}
 							</p>
 
@@ -300,9 +311,17 @@
 									<span class="fab fa-youtube"></span>
 								</a>
 							</div>
+							<div class='newletter' style="padding-top: 20px; padding-left: 0px;">
+								<form action="{%url 'news_letter' %}" method="post" enctype="multipart/form-data">
+									{% csrf_token %}
+								<input class="bo-1-rad-3 bocl13 size-a-19 f1-s-13 cl5 plh6 p-rl-18 m-b-20" type="text" name="emailOrphone" placeholder="Email or Phone No*">
+								<button type="submit" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> Subscibe</button>
+								
+								</form>
+							</div>
 						</div>
 					</div>
-
+                   
 					<div class="col-sm-6 col-lg-4 p-b-20">
 						<div class="size-h-3 flex-s-c">
 							<h5 class="f1-m-7 cl0">
@@ -319,8 +338,8 @@
 								</a>
 
 								<div class="size-w-5">
-									<h6 class="p-b-5">
-										<a href="{%url 'news_detail' word=pop.title %}" class="f1-s-5 cl11 hov-cl10 trans-03">
+									<h6 class="p-b-5"  style="text-align: justify;">
+										<a href="{%url 'news_detail' word=pop.title %}" class="f1-s-5 cl11 hov-cl10 trans-03"> 
 											{{pop.title}}
 										</a>
 									</h6>
@@ -395,7 +414,10 @@
 			</div>
 		</div>
 	</div>
-
+	
+	
+	{% block footerscript %}
+	{% endblock %}
 	<!--===============================================================================================-->
 	<script src="{%static 'front/vendor/jquery/jquery-3.2.1.min.js'%}"></script>
 	<!--===============================================================================================-->

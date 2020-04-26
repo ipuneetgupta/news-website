@@ -10,16 +10,17 @@ import random
 from random import randint
 from django.contrib.auth.models import User,Group,Permission
 from manager.models import Manager
+import string
 # Create your views here.
 
 def home(request):
     site = Main.objects.get(pk=4)
-    news = News.objects.all().order_by('-pk')
+    news = News.objects.all().filter(act=1).order_by('-pk')
     cat = Cat.objects.all()
     subcat = SubCat.objects.all()
-    last3news = News.objects.all().order_by('-pk')[:3]
-    popnews =  News.objects.all().order_by('-views')
-    pop3news =  News.objects.all().order_by('-views')[:3]
+    last3news = News.objects.all().filter(act=1).order_by('-pk')[:3]
+    popnews =  News.objects.all().filter(act=1).order_by('-views')
+    pop3news =  News.objects.all().filter(act=1).order_by('-views')[:3]
     trending = Trending.objects.all().order_by('-pk')[:5]
 
     #random msg selection start
@@ -54,6 +55,24 @@ def panel(request):
     #     error_msg = "Access Denied !"
     #     return render(request,'back/error.html',{'error':error_msg})
     # #end
+
+    # #Random strong Password Creation
+    # ch = ['!','@','#','$','^']
+    # randPas = ''
+    # for i in range(4):
+    #     randPas+=random.choice(string.ascii_letters)
+    #     randPas+=random.choice(ch)
+    #     randPas+=int(random.randint(0,9))
+    # #end creation
+    # #random Query
+    # count = News.objects.count()
+    # randNews = News.objects.all()[random.randint(0,count-1)]
+    # #end
+
+    #Humanize Libaray
+    #   {% load humanize %}
+    #   {{name|function}}
+    #
 
     return render(request,'back/panel.html')
 

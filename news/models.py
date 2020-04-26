@@ -16,6 +16,8 @@ class News(models.Model):
     views = models.IntegerField(default=0)
     ocatId = models.IntegerField(default=0)
     tag = models.TextField(default=" ")
-
+    act = models.IntegerField(default=0)
+    publisherName = models.CharField(default="#",max_length=300)
+    rand = models.IntegerField(default=0)
     def __str__(self):
         return self.title

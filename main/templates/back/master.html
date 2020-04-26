@@ -46,6 +46,7 @@
 
     <!-- The themes stylesheet of this template (for using specific theme color in individual elements - must included last) -->
     <link rel="stylesheet" href="{%static 'back/css/themes.css'%}">
+    <link rel="stylesheet" type="text/css" href="{%static 'front/css/myfile.css'%}">
     <!-- END Stylesheets -->
 
     {% block headerblock %}
@@ -74,6 +75,10 @@
             </div>
         </div>
         <!-- END Preloader -->
+
+        <!-- Scroll to top link, initialized in js/app.js - scrollToTop() -->
+        <a href="#" id="to-top"><i class="fa fa-angle-double-up"></i></a>
+
 
         <!-- Page Container -->
         <!-- In the PHP version you can set the following options from inc/config file -->
@@ -107,6 +112,8 @@
                 'enable-cookies'                                enables cookies for remembering active color theme when changed from the sidebar links
             -->
         <div id="page-container" class="sidebar-partial sidebar-visible-lg sidebar-no-animations">
+
+
             <!-- Main Sidebar -->
             <div id="sidebar">
                 <!-- Wrapper for scrolling functionality -->
@@ -145,7 +152,7 @@
 
 
                         <!-- Sidebar Navigation -->
-                        <ul class="sidebar-nav">
+                        <ul class="sidebar-nav" data-toggle="tooltip">
                             {% if perms.main.master_user %}
 
                             <li>
@@ -169,6 +176,9 @@
                                 <a href="/panel/about/setting/"><i
                                         class="gi gi-show_big_thumbnails sidebar-nav-icon"></i><span
                                         class="sidebar-nav-mini-hide">About Setting</span></a>
+                                <a href="/panel/comments/list"><i
+                                        class="gi gi-show_big_thumbnails sidebar-nav-icon"></i><span
+                                        class="sidebar-nav-mini-hide">Comments</span></a>
                                 <a href="/panel/contactform/"><i
                                         class="gi gi-show_big_thumbnails sidebar-nav-icon"></i><span
                                         class="sidebar-nav-mini-hide">Contact Form</span></a>
@@ -235,6 +245,20 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li>
+                                <a href="#" class="sidebar-nav-menu"><i
+                                        class="fa fa-angle-left sidebar-nav-indicator sidebar-nav-mini-hide"></i><i
+                                        class="gi gi-show_big_thumbnails sidebar-nav-icon"></i><span
+                                        class="sidebar-nav-mini-hide">NewsLetter</span></a>
+                                <ul>
+                                    <li>
+                                        <a href="/panel/newsletter/emails">Email</a>
+                                    </li>
+                                    <li>
+                                        <a href="/panel/newsletter/phones">Phone No</a>
+                                    </li>
+                                </ul>
+                            </li>
                             {% endif %}
 
                             <li>
@@ -287,8 +311,44 @@
                         'navbar-fixed-bottom'       for a bottom fixed header (fixed sidebars with scroll will be auto initialized, functionality can be found in js/app.js - handleSidebar()))
                             'header-fixed-bottom'   has to be added on #page-container only if the class 'navbar-fixed-bottom' was added
                     -->
-                <!-- header -->
+
                 <header class="navbar navbar-default">
+                    <!-- Left Header Navigation -->
+                    <ul class="nav navbar-nav-custom">
+                        <!-- Main Sidebar Toggle Button -->
+                        <li>
+                            <a href="#" onclick="App.sidebar('toggle-sidebar');this.blur();">
+                                <i class="fa fa-bars fa-fw"></i>
+                            </a>
+                        </li>
+                        <!-- END Main Sidebar Toggle Button -->
+
+                        <!-- Template Options -->
+                        <!-- Change Options functionality can be found in js/app.js - templateOptions() -->
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="gi gi-settings"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-custom dropdown-options">
+                                <li class="dropdown-header text-center">Header Style</li>
+                                <li>
+                                    <div class="btn-group btn-group-justified btn-group-sm">
+                                        <a href="#" class="btn btn-primary" id="options-header-default">Light</a>
+                                        <a href="#" class="btn btn-primary" id="options-header-inverse">Dark</a>
+                                    </div>
+                                </li>
+                                <li class="dropdown-header text-center">Page Style</li>
+                                <li>
+                                    <div class="btn-group btn-group-justified btn-group-sm">
+                                        <a href="#" class="btn btn-primary" id="options-main-style">Default</a>
+                                        <a href="#" class="btn btn-primary" id="options-main-style-alt">Alternative</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- END Template Options -->
+                    </ul>
+                    <!-- END Left Header Navigation -->
 
                     <!-- Search Form -->
                     <form action="page_ready_search_results.html" method="post" class="navbar-form-custom">
@@ -298,11 +358,68 @@
                         </div>
                     </form>
                     <!-- END Search Form -->
+
+                    <!-- Right Header Navigation -->
+                    <ul class="nav navbar-nav-custom pull-right">
+                        <!-- User Dropdown -->
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="{%static 'back/img/placeholders/avatars/avatar2.jpg' %}" alt="{{request.user}}"> <i
+                                    class="fa fa-angle-down"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-custom dropdown-menu-right">
+                                <li class="dropdown-header text-center">Account</li>
+                                <li>
+                                    <a href="page_ready_timeline.html">
+                                        <i class="fa fa-clock-o fa-fw pull-right"></i>
+                                        <span class="badge pull-right">10</span>
+                                        Updates
+                                    </a>
+
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="page_ready_user_profile.html">
+                                        <i class="fa fa-user fa-fw pull-right"></i>
+                                        Profile
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="page_ready_lock_screen.html"><i class="fa fa-lock fa-fw pull-right"></i>
+                                        Lock Account</a>
+                                    <a href="login.html"><i class="fa fa-ban fa-fw pull-right"></i> Logout</a>
+                                </li>
+                                <li class="dropdown-header text-center">Activity</li>
+                                <li>
+                                    <div class="alert alert-success alert-alt">
+                                        <small>5 min ago</small><br>
+                                        <i class="fa fa-thumbs-up fa-fw"></i> You had a new sale ($10)
+                                    </div>
+
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- END User Dropdown -->
+                    </ul>
+                    <!-- END Right Header Navigation -->
                 </header>
                 <!-- END Header -->
 
+
                 <!-- Page content -->
                 <div id="page-content">
+
+                    <!-- start message tag -->
+                    {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                            {% endfor %}
+                    </ul>
+                    {% endif %}
+                    <!-- end message appear -->
+
                     {% block mainblock %}
                     {%  endblock %}
 
