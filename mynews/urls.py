@@ -15,7 +15,7 @@ urlpatterns = [
     url(r"",include('manager.urls')),
     url(r"",include('newsletter.urls')),
     url(r"",include('comment.urls')),
-
+    url(r"",include('blacklist.urls')),
 
 ]
 

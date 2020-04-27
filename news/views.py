@@ -8,6 +8,7 @@ from cat.models import Cat
 from trending.models import Trending
 from django.contrib import messages
 from comment.models import Comment
+from django.core.paginator import Paginator,PageNotAnInteger,Page,EmptyPage
 import random
 # Create your views here.
 def news_detail(request,word):
@@ -105,11 +106,19 @@ def news_list(request):
     for i in request.user.groups.all():
         if i.name == 'masteruser':
             perm = 1
+    #Paginator
     if perm == 0:
-         news = News.objects.filter(publisherName=request.user)
+        news = News.objects.filter(publisherName=request.user)
     elif perm == 1:
-         news = News.objects.all()
-    #end
+        newss = News.objects.all()
+        paginator = Paginator(newss,2)
+        page = request.GET.get('page')
+        try:
+            news = paginator.page(page)
+        except EmptyPage:
+            news = paginator.page(paginator.num_pages)
+        except PageNotAnInteger:
+            news = paginator.page(1)
          
     return render(request,'back/news_list.html',{'news':news})
 

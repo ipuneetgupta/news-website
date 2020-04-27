@@ -4,10 +4,10 @@ from django.db import models
 
 
 class Manager(models.Model):
-    name = models.CharField(default=" ",max_length=200)
-    u_name = models.CharField(default=" ",max_length=100)
+    name = models.CharField(default="",max_length=200)
+    u_name = models.CharField(default="",max_length=100)
     e_mail = models.TextField()
-    user_ip = models.CharField(max_length=15,default=" ")
-    
+    user_ip = models.CharField(max_length=15,default="")
+    user_ip = models.TextField(default="")
     def __str__(self):
         return self.u_name

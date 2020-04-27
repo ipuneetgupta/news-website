@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'manager',
     'newsletter',
     'comment',
+    'blacklist',
+    'mathfilters',
 ]
 
 MIDDLEWARE = [

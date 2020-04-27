@@ -1,7 +1,6 @@
 {% extends 'back/master.html' %}
 {% load static %}
-
-
+{% load mathfilters %}
 {% block mainblock %}
 <!-- Page content -->
 <div id="page-content">
@@ -26,7 +25,7 @@
             <h2><strong>News</strong> List</h2>
         </div>
         <div class="table-responsive">
-            <table id="example-datatable" class="table table-vcenter table-condensed table-bordered">
+            <table id="" class="table table-vcenter table-condensed table-bordered">
                 <thead>
                     <tr>
                         <th class="text-center">ID</th>
@@ -48,8 +47,8 @@
                         <td class="text-center">{{c.pk}}</td>
                         <td class="text-center"><img style="display: inline-block; width: 50px; height: 50px;"
                                 src="{{c.newsImageUrl}}" alt="avatar" class="img-circle"></td>
-                        <td>{{c.title|safe}}</td>
-                        <td>{{c.newsSummary|safe}}</td>
+                        <td style=" text-align: justify;">{{c.title|safe}}</td>
+                        <td style=" text-align: justify;">{{c.newsSummary|safe}}</td>
                         <td>{{c.publishDate}}</td>
                         <td>{{c.catName}}</td>
                         <td>{{c.writerName}}</td>
@@ -64,11 +63,11 @@
                             <div class="btn-group">
                                 <a href="{%url 'news_edit' pk=c.pk %}" data-toggle="tooltip" title="Edit"
                                     class="btn btn-xs btn-default"><i class="fa fa-pencil"></i>Edit</a>
-                                    {% if perms.main.master_user %}
-                                     <a href="{%url 'news_publish' pk=c.pk %}" data-toggle="tooltip" title="Publish"
+                                {% if perms.main.master_user %}
+                                <a href="{%url 'news_publish' pk=c.pk %}" data-toggle="tooltip" title="Publish"
                                     class="btn btn-xs btn-success"><i class="fa fa-pencil"></i>Publish</a>
-                                    {% endif %}
-                                     <a href="{%url 'news_delete' pk=c.pk %}" data-toggle="tooltip" title="Delete"
+                                {% endif %}
+                                <a href="{%url 'news_delete' pk=c.pk %}" data-toggle="tooltip" title="Delete"
                                     class="btn btn-xs btn-danger"><i class="fa fa-times"></i>Delete</a>
                             </div>
                         </td>
@@ -78,6 +77,31 @@
             </table>
         </div>
     </div>
+
+    <ul class="pager">
+        <!-- <p style="display: inline-block;text-align: center;">Page {{news.number}}  {{news.paginator.num_pages}}</p> -->
+        {% if news.has_previous %}
+        <li class="previous"><a style="color: black;" href="?page={{news.previous_page_number}}">Previous</a></li>
+        {% endif %}
+        
+
+
+        {% if news.has_previous %}
+        <li class=" page-item"><a style="color: black;" class="page-link" href="?page={{news.number|sub:1}}">{{news.number|sub:1}}</a></li>
+        {% endif %}
+
+        <li class="page-item"><a style="background-color:cadetblue; color: black;" class="page-link" href="#">{{news.number}} </a></li>
+
+        {% if news.has_next %}
+        <li class=" page-item"><a style="color: black;" class="page-link" href="?page={{news.number|sub:1}}">{{news.number|add:1}}</a></li>
+        {% endif %}
+
+        
+        {% if news.has_next %}
+        <li class="next"><a style="color: black;" href="?page={{news.next_page_number}}">Next</a></li>
+        {% endif %}
+    </ul>
+
     <!-- END Datatables Content -->
 </div>
 <!-- END Page Content -->

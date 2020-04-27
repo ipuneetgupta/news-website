@@ -12,6 +12,7 @@ from django.contrib.auth.models import User,Group,Permission
 from manager.models import Manager
 import string
 from ipware import get_client_ip
+from ip2geotools.databases.noncommercial import DbIpCity
 # Create your views here.
 
 def home(request):
@@ -23,11 +24,12 @@ def home(request):
     popnews =  News.objects.all().filter(act=1).order_by('-views')
     pop3news =  News.objects.all().filter(act=1).order_by('-views')[:3]
     trending = Trending.objects.all().order_by('-pk')[:5]
+    last4news = News.objects.all().filter(act=1).order_by('-pk')[4:8]
 
     #random msg selection start
     # random_object =  Trending.objects.all()[randint(0,len(trending)-1)]
     #end
-    return render(request,'front/home.html',{'site':site,'news':news,'cat':cat,'subcat':subcat,'last3news':last3news , 'popnews':popnews,'pop3news':pop3news,'trending':trending})
+    return render(request,'front/home.html',{'site':site,'news':news,'cat':cat,'subcat':subcat,'last3news':last3news , 'popnews':popnews,'pop3news':pop3news,'trending':trending,'last4news':last4news})
 
 def about(request):
     site = Main.objects.get(pk=4)
@@ -131,11 +133,20 @@ def myregister(request):
             return render(request,'front/msgbox.html',{'msg':msg,'site':site})
 
         if len(User.objects.filter(username=username)) == 0 and len(User.objects.filter(email=email))==0:
+            #ip,country and city of user extraction 
             ip , isroutable = get_client_ip(request)
             if ip is None:
-               ip = '0.0.0.0'
+                ip = '0.0.0.0'
+            try:
+                response = DbIpCity.get(ip,api_key='free')
+                country = response.country + " | " + response.city
+
+            except:
+                country = "unknown"
+            #end extraction
+                
             user = User.objects.create_user(username=username,email=email,password=password1) 
-            b = Manager(name=name,e_mail=email,u_name=username,user_ip=ip)
+            b = Manager(name=name,e_mail=email,u_name=username,user_ip=ip,country=country)
             b.save()
         else:
             msg = "Username or email Already Exist !"
