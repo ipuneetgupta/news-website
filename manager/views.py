@@ -13,6 +13,12 @@ from trending.models import Trending
 # Create your views here.
 
 def manager_list(request):
+    
+      #adminlogin start
+    if not request.user.is_authenticated:
+        return redirect('mylogin')
+    #adminlogin end
+
     #permission for access for masteruser
     perm = 0
     for i in request.user.groups.all():
@@ -23,11 +29,7 @@ def manager_list(request):
         return render(request,'back/error.html',{'error':error_msg})
     #end
 
-    #adminlogin start
-    if not request.user.is_authenticated:
-        return redirect('mylogin')
-    #adminlogin end
-
+  
     man_list = Manager.objects.all()
     return render(request,'back/manager_list.html',{'managerlist':man_list})
 

@@ -11,6 +11,7 @@ from random import randint
 from django.contrib.auth.models import User,Group,Permission
 from manager.models import Manager
 import string
+from ipware import get_client_ip
 # Create your views here.
 
 def home(request):
@@ -40,10 +41,10 @@ def about(request):
 
 def panel(request):
 
-    #adminlogin start
-    if not request.user.is_authenticated:
-        return redirect('mylogin')
-    #adminlogin end
+    # #adminlogin start
+    # if not request.user.is_authenticated:
+    #     return redirect('mylogin')
+    # #adminlogin end
     
     # #User permission for access for master-user
     # perm = 0
@@ -130,8 +131,11 @@ def myregister(request):
             return render(request,'front/msgbox.html',{'msg':msg,'site':site})
 
         if len(User.objects.filter(username=username)) == 0 and len(User.objects.filter(email=email))==0:
+            ip , isroutable = get_client_ip(request)
+            if ip is None:
+               ip = '0.0.0.0'
             user = User.objects.create_user(username=username,email=email,password=password1) 
-            b = Manager(name=name,e_mail=email,u_name=username)
+            b = Manager(name=name,e_mail=email,u_name=username,user_ip=ip)
             b.save()
         else:
             msg = "Username or email Already Exist !"
