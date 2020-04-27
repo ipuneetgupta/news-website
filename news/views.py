@@ -10,6 +10,7 @@ from django.contrib import messages
 from comment.models import Comment
 from django.core.paginator import Paginator,PageNotAnInteger,Page,EmptyPage
 import random
+from django_crontab import models
 # Create your views here.
 def news_detail(request,word):
   
