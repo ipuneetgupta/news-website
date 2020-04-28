@@ -72,7 +72,7 @@
                             </span>
 
                             <a href="#" class="f1-s-3 cl8 hov-cl10 trans-03 m-r-15">
-                                0 Comment
+                                {{cmcount}} Comment
                             </a>
                         </div>
 
@@ -202,7 +202,7 @@
                             {% for c in cat %}
                             {% if c.newsCount != 0 %}
                             <li class="how-bor3 p-rl-4">
-                                <a href="#" class="dis-block f1-s-10 text-uppercase cl2 hov-cl10 trans-03 p-tb-13">
+                                <a href="{%url 'news_all_show' word=c.catName %}" class="dis-block f1-s-10 text-uppercase cl2 hov-cl10 trans-03 p-tb-13">
                                     {{c.catName}}({{c.newsCount}})
                                 </a>
                             </li>

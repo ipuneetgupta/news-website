@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^panel/news/edit/(?P<pk>\d+)/$', views.news_edit, name='news_edit'),
     url(r'^panel/news/publish/(?P<pk>\d+)/$', views.news_publish, name='news_publish'),
     url(r'^url/?short=/(?P<randNum>\d+)/$', views.news_detail_shorturl, name='news_detail_shorturl'),
+    url(r'^all/news/(?P<word>.*)/$', views.news_all_show, name='news_all_show'),
 
 ]

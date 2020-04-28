@@ -24,7 +24,7 @@ def home(request):
     popnews =  News.objects.all().filter(act=1).order_by('-views')
     pop3news =  News.objects.all().filter(act=1).order_by('-views')[:3]
     trending = Trending.objects.all().order_by('-pk')[:5]
-    last4news = News.objects.all().filter(act=1).order_by('-pk')[4:8]
+    last4news = News.objects.all().filter(act=1).order_by('-pk')[:4]
 
     #random msg selection start
     # random_object =  Trending.objects.all()[randint(0,len(trending)-1)]

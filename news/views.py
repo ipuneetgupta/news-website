@@ -49,14 +49,14 @@ def news_detail(request,word):
     code = News.objects.get(title=word)
     
     cms = Comment.objects.filter(newsId=code.pk,status=1).order_by('-pk')[:3]
-
+    cmcount = len(cms)
     iscommentPresent = 0
     if len(cms) !=0 :
         iscommentPresent = 1
     
     link = "/url/?short=/" + str(News.objects.get(title=word).rand)
     
-    return render(request,'front/news_detail.html',{'shownews':shownews,'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'subcat':subcat,'news':news,'tags':tags,'trending':trending,'cms':cms,'iscommentPresent':iscommentPresent,'link':link})
+    return render(request,'front/news_detail.html',{'shownews':shownews,'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'subcat':subcat,'news':news,'tags':tags,'trending':trending,'cms':cms,'iscommentPresent':iscommentPresent,'link':link,'cmcount':cmcount})
 
 def news_detail_shorturl(request,randNum):
 
@@ -93,10 +93,17 @@ def news_detail_shorturl(request,randNum):
     #endviewupdate
        
     shownews = News.objects.filter(rand=randNum)
+    code = News.objects.get(rand=randNum)
+
+    cms = Comment.objects.filter(newsId=code.pk,status=1).order_by('-pk')[:3]
+    cmcount = len(cms)
+    iscommentPresent = 0
+    if len(cms) !=0 :
+        iscommentPresent = 1
 
     link = "/url/?short=/" + str(randNum)
 
-    return render(request,'front/news_detail.html',{'shownews':shownews,'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'subcat':subcat,'news':news,'tags':tags,'trending':trending,'link':link})
+    return render(request,'front/news_detail.html',{'shownews':shownews,'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'subcat':subcat,'news':news,'tags':tags,'trending':trending,'cms':cms,'iscommentPresent':iscommentPresent,'link':link,'cmcount':cmcount})
 
 def news_list(request):
 
@@ -115,7 +122,7 @@ def news_list(request):
         news = News.objects.filter(publisherName=request.user)
     elif perm == 1:
         newss = News.objects.all()
-        paginator = Paginator(newss,2)
+        paginator = Paginator(newss,5)
         page = request.GET.get('page')
         try:
             news = paginator.page(page)
@@ -424,3 +431,28 @@ def news_publish(request,pk):
     b.save()
 
     return redirect('news_list')
+
+def news_all_show(request,word):
+    site = Main.objects.get(pk=4)
+    news = News.objects.all().order_by('-pk')
+    cat = Cat.objects.all()
+    subcat = SubCat.objects.all()
+    last3news = News.objects.all().order_by('-pk')[:3]
+    popnews =  News.objects.all().order_by('-views')
+    pop3news =  News.objects.all().order_by('-views')[:3]
+    trending = Trending.objects.all().order_by('-pk')[:5]
+
+    showcat = Cat.objects.get(catName=word)
+
+    #tag
+    tags =[word]
+    for x in SubCat.objects.filter(catId=showcat.pk):
+        tags.append(x.subcatName)
+    #endtag
+    
+    allnews = News.objects.filter(ocatId=showcat.pk)
+    
+
+    link = "all/news/" + str(word)
+
+    return render(request,'front/all_news.html',{'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'subcat':subcat,'news':news,'trending':trending,'link':link,'showcat':showcat,'tags':tags,'allnews':allnews})
