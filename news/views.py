@@ -10,7 +10,6 @@ from django.contrib import messages
 from comment.models import Comment
 from django.core.paginator import Paginator,PageNotAnInteger,Page,EmptyPage
 import random
-from django_crontab import models
 # Create your views here.
 def news_detail(request,word):
   
@@ -55,7 +54,9 @@ def news_detail(request,word):
     if len(cms) !=0 :
         iscommentPresent = 1
     
-    return render(request,'front/news_detail.html',{'shownews':shownews,'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'subcat':subcat,'news':news,'tags':tags,'trending':trending,'cms':cms,'iscommentPresent':iscommentPresent})
+    link = "/url/?short=/" + str(News.objects.get(title=word).rand)
+    
+    return render(request,'front/news_detail.html',{'shownews':shownews,'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'subcat':subcat,'news':news,'tags':tags,'trending':trending,'cms':cms,'iscommentPresent':iscommentPresent,'link':link})
 
 def news_detail_shorturl(request,randNum):
 
@@ -93,7 +94,9 @@ def news_detail_shorturl(request,randNum):
        
     shownews = News.objects.filter(rand=randNum)
 
-    return render(request,'front/news_detail.html',{'shownews':shownews,'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'subcat':subcat,'news':news,'tags':tags,'trending':trending})
+    link = "/url/?short=/" + str(randNum)
+
+    return render(request,'front/news_detail.html',{'shownews':shownews,'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'subcat':subcat,'news':news,'tags':tags,'trending':trending,'link':link})
 
 def news_list(request):
 

@@ -23,7 +23,43 @@
     <!-- Datatables Content -->
     <div class="block full">
         <div class="block-title">
-            <h2><strong>News</strong> List</h2>
+            <h2><strong>Download Cat</strong> List</h2>
+        </div>
+        <a href="{%url 'export_cat_csv' %}" data-toggle="tooltip" title="Download Category List"
+            class="btn btn-xs btn-success"><i></i>CSV</a>
+    </div>
+    <!-- END Datatables Content -->
+
+    <!-- Datatables Content -->
+    <div class="block full">
+        <div class="block-title">
+            <h2><strong>Upload Category</strong> List</h2>
+        </div>
+
+
+        <!-- Input Grid Content -->
+        <form action="{%url 'import_cat_csv' %}" method="post" class="form-horizontal form-bordered"
+            enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <div class="col-sm-6">
+                    <input type="file" id="csv_file" name="csv_file" title="Import Csv File" required>
+
+                </div>
+                <div class="col-sm-6">
+                    <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-angle-right"></i>
+                        Submit</button>
+                </div>
+            </div>
+        </form>
+        <!-- END Input Grid Content -->
+    </div>
+    <!-- END Datatables Content -->
+
+    <!-- Datatables Content -->
+    <div class="block full">
+        <div class="block-title">
+            <h2><strong>Category</strong> List</h2>
         </div>
         <div class="table-responsive">
             <table id="example-datatable" class="table table-vcenter table-condensed table-bordered">
@@ -41,10 +77,8 @@
                         <td>{{c.catName}}</td>
                         <td class="text-center">
                             <div class="btn-group">
-                                <a href="#" data-toggle="tooltip" title="Edit"
-                                    class="btn btn-xs btn-default"><i class="fa fa-pencil"></i>Edit</a>
-                                <a href="#" data-toggle="tooltip" title="Delete"
-                                    class="btn btn-xs btn-danger"><i class="fa fa-times"></i>Delete</a>
+                                <a href="{%url 'cat_del' pk=c.pk %}" data-toggle="tooltip" title="Delete" class="btn btn-xs btn-danger"><i
+                                        class="fa fa-times"></i>Delete</a>
                             </div>
                         </td>
                     </tr>
