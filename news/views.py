@@ -10,6 +10,11 @@ from django.contrib import messages
 from comment.models import Comment
 from django.core.paginator import Paginator,PageNotAnInteger,Page,EmptyPage
 import random
+from itertools import chain
+
+pageno = 0
+mysearch = ""  #global variable for solve conflict of pagination
+
 # Create your views here.
 def news_detail(request,word):
   
@@ -121,15 +126,30 @@ def news_list(request):
     if perm == 0:
         news = News.objects.filter(publisherName=request.user)
     elif perm == 1:
-        newss = News.objects.all()
-        paginator = Paginator(newss,5)
-        page = request.GET.get('page')
-        try:
-            news = paginator.page(page)
-        except EmptyPage:
-            news = paginator.page(paginator.num_pages)
-        except PageNotAnInteger:
-            news = paginator.page(1)
+
+        if request.GET.get('page'):
+            newss = News.objects.all()
+            paginator = Paginator(newss,5)
+            page = request.GET.get('page')
+            global pageno 
+            pageno = int(page)
+            try:
+                news = paginator.page(page)
+            except EmptyPage:
+                news = paginator.page(paginator.num_pages)
+            except PageNotAnInteger:
+                news = paginator.page(1)
+        
+        else:
+            newss = News.objects.all()
+            paginator = Paginator(newss,5)
+            page = pageno
+            try:
+                news = paginator.page(page)
+            except EmptyPage:
+                news = paginator.page(paginator.num_pages)
+            except PageNotAnInteger:
+                news = paginator.page(1)
          
     return render(request,'back/news_list.html',{'news':news})
 
@@ -450,9 +470,104 @@ def news_all_show(request,word):
         tags.append(x.subcatName)
     #endtag
     
-    allnews = News.objects.filter(ocatId=showcat.pk)
-    
-
+    #Paginator
+    allnewss = News.objects.filter(ocatId=showcat.pk)
+    paginator = Paginator(allnewss,12)
+    page = request.GET.get('page')
+    try:
+        allnews = paginator.page(page)
+    except EmptyPage:
+        allnews = paginator.page(paginator.num_pages)
+    except PageNotAnInteger:
+        allnews = paginator.page(1)
+         
     link = "all/news/" + str(word)
 
-    return render(request,'front/all_news.html',{'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'subcat':subcat,'news':news,'trending':trending,'link':link,'showcat':showcat,'tags':tags,'allnews':allnews})
+    return render(request,'front/all_news_category.html',{'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'subcat':subcat,'news':news,'trending':trending,'link':link,'showcat':showcat,'tags':tags,'allnews':allnews})
+
+def all_news(request):
+    site = Main.objects.get(pk=4)
+    news = News.objects.all().order_by('-pk')
+    cat = Cat.objects.all()
+    subcat = SubCat.objects.all()
+    last3news = News.objects.all().order_by('-pk')[:3]
+    popnews =  News.objects.all().order_by('-views')[:6]
+    pop3news =  News.objects.all().order_by('-views')[:3]
+    trending = Trending.objects.all().order_by('-pk')[:5]
+
+    
+    #Paginator
+    allnewss = News.objects.all()
+    paginator = Paginator(allnewss,12)
+    page = request.GET.get('page')
+    try:
+        allnews = paginator.page(page)
+    except EmptyPage:
+        allnews = paginator.page(paginator.num_pages)
+    except PageNotAnInteger:
+        allnews = paginator.page(1)
+
+     #tag
+    tags = list()
+    for x in Cat.objects.all():
+        tags.append(x.catName)
+    #endtag
+
+    link = "all/news/"
+
+    return render(request,'front/news_all.html',{'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'tags':tags,'subcat':subcat,'news':news,'trending':trending,'allnews':allnews})
+
+def all_news_search(request):
+
+    if request.method == "POST":
+
+        txt = request.POST.get('search')
+        mysearch = txt
+        a = News.objects.filter(title__contains=txt)
+        b = News.objects.filter(newsSummary__contains=txt)
+        c = News.objects.filter(newsContent__contains=txt)
+        
+        allnewss = list(chain(a,b,c))
+        allnewss = list(dict.fromkeys(allnewss))
+
+    else:
+
+        txt=mysearch
+        a = News.objects.filter(title__contains=txt)
+        b = News.objects.filter(newsSummary__contains=txt)
+        c = News.objects.filter(newsContent__contains=txt)
+        
+        allnewss = list(chain(a,b,c))
+        allnewss = list(dict.fromkeys(allnewss))
+
+    
+    site = Main.objects.get(pk=4)
+    news = News.objects.all().order_by('-pk')
+    cat = Cat.objects.all()
+    subcat = SubCat.objects.all()
+    last3news = News.objects.all().order_by('-pk')[:3]
+    popnews =  News.objects.all().order_by('-views')[:6]
+    pop3news =  News.objects.all().order_by('-views')[:3]
+    trending = Trending.objects.all().order_by('-pk')[:5]
+
+    
+    #Paginator
+    paginator = Paginator(allnewss,12)
+    page = request.GET.get('page')
+    try:
+        allnews = paginator.page(page)
+    except EmptyPage:
+        allnews = paginator.page(paginator.num_pages)
+    except PageNotAnInteger:
+        allnews = paginator.page(1)
+
+    #tag
+    tags = list()
+    for x in Cat.objects.all():
+        tags.append(x.catName)
+    #endtag
+
+    link = "all/news/"
+
+    return render(request,'front/news_all.html',{'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'tags':tags,'subcat':subcat,'news':news,'trending':trending,'allnews':allnews})
+

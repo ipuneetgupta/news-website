@@ -332,3 +332,5 @@ def change_pass(request):
 
     return render(request,'back/change_pass.html')
 
+def answer_cm(request,pk):
+    return render(request,'back/answer_cm.html',{'pk':pk})

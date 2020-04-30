@@ -1,0 +1,63 @@
+{% extends 'back/master.html' %}
+{% load static %}
+
+
+{% block mainblock %}
+<!-- Page content -->
+<div id="page-content">
+    <!-- Datatables Header -->
+    <div class="content-header">
+        <div class="header-section">
+            <h1>
+                <i class="fa fa-table"></i>Answer Comments<br><small>You can ans for user Comments
+                </small>
+            </h1>
+        </div>
+    </div>
+    <ul class="breadcrumb breadcrumb-top">
+        <li>Comments</li>
+        <li><a href="/answer/comments/{{pk}}">Answer</a></li>
+    </ul>
+    <!-- END Datatables Header -->
+</div>
+<!-- END Page Content -->
+<div class="row">
+    <div class="col-md-12">
+        <!-- Input Grid Block -->
+        <div class="block">
+            <!-- Input Grid Title -->
+            <div class="block-title">
+                <h2>Answer of Comments<h2>
+            </div>
+            <!-- END Input Grid Title -->
+
+            <!-- Input Grid Content -->
+            <form action="{%url 'answer_cm' pk=pk %}" method="post" class="form-horizontal form-bordered" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <textarea type="text" id="txt" name='txt' rows='4' class="form-control"
+                            placeholder="Answer of comments"></textarea>
+                    </div>
+                </div>
+
+                <script>ClassicEditor.create(document.getElementById("shortTxt"))</script>
+
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-sm btn-primary"><i class="fa fa-angle-right"></i>
+                            Submit</button>
+                    </div>
+                </div>
+            </form>
+            <!-- END Input Grid Content -->
+        </div>
+        <!-- END Input Grid Block -->
+    </div>
+</div>
+{% endblock %}
+
+{% block footerblock %}
+<script src="{%static 'back/js/pages/tablesDatatables.js'%}"></script>
+<script>$(function () { TablesDatatables.init(); });</script>
+{% endblock %}
