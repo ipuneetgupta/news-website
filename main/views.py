@@ -10,43 +10,74 @@ import random
 from random import randint
 from django.contrib.auth.models import User,Group,Permission
 from manager.models import Manager
+from news.models import HeadLine
+from django.contrib import messages
 import string
 from ipware import get_client_ip
 from ip2geotools.databases.noncommercial import DbIpCity
+from zeep import Client #soup
+import requests #curl
+from itertools import chain
 # Create your views here.
 
 def home(request):
+    
     site = Main.objects.get(pk=4)
-    news = News.objects.all().filter(act=1).order_by('-pk')
+    # news = News.objects.all().filter(act=1).order_by('-pk')
+    latestnews = News.objects.all().filter(act=1).order_by('-pk')[:6]
     cat = Cat.objects.all()
     subcat = SubCat.objects.all()
     last3news = News.objects.all().filter(act=1).order_by('-pk')[:3]
-    popnews =  News.objects.all().filter(act=1).order_by('-views')
+    popnews =  News.objects.all().filter(act=1).order_by('-views')[:4]
     pop3news =  News.objects.all().filter(act=1).order_by('-views')[:3]
     trending = Trending.objects.all().order_by('-pk')[:5]
     last4news = News.objects.all().filter(act=1).order_by('-pk')[:4]
 
-    #random msg selection start
-    # random_object =  Trending.objects.all()[randint(0,len(trending)-1)]
-    #end
-    return render(request,'front/home.html',{'site':site,'news':news,'cat':cat,'subcat':subcat,'last3news':last3news , 'popnews':popnews,'pop3news':pop3news,'trending':trending,'last4news':last4news})
+    headline = list()
+    for x in cat:
+        a = HeadLine.objects.filter(ocatId = x.pk).order_by('-pk')
+        headline.append(a[:3])
+        if len(headline)>15:
+            break
+    headline = list(chain(*headline)) 
+    
+    category_news = list()
+    news = list()
+    for x in cat:
+        a = News.objects.filter(ocatId = x.pk).order_by('-pk')
+        category_news.append(a[:2])
+        news.append(a[:4])
+    news = list(chain(*news))
+    category_news = list(chain(*category_news))
+
+    params = {'headline':headline,'category_news':category_news,'site':site,'news':news,'cat':cat,'subcat':subcat,
+    'latestnews':latestnews,'last3news':last3news , 
+    'popnews':popnews,'pop3news':pop3news,
+    'trending':trending,'last4news':last4news}
+    
+    return render(request,'front/home.html',params)
 
 def about(request):
     site = Main.objects.get(pk=4)
     cat = Cat.objects.all()
     subcat = SubCat.objects.all()
-    news = News.objects.all().order_by('-pk')
     pop3news =  News.objects.all().order_by('-views')[:3]
     trending = Trending.objects.all().order_by('-pk')[:5]
+
+    news = list()
+    for x in cat:
+        a = News.objects.filter(ocatId = x.pk).order_by('-pk')
+        news.append(a[:4])
+    news = list(chain(*news))
 
     return render(request,'front/about.html',{'site':site,'cat':cat,'subcat':subcat,'news':news,'pop3news':pop3news,'trending':trending})
 
 def panel(request):
 
-    # #adminlogin start
-    # if not request.user.is_authenticated:
-    #     return redirect('mylogin')
-    # #adminlogin end
+    #adminlogin start
+    if not request.user.is_authenticated:
+        return redirect('mylogin')
+    #adminlogin end
     
     # #User permission for access for master-user
     # perm = 0
@@ -89,6 +120,10 @@ def mylogin(request):
             if user != None:
                 login(request,user)
                 return redirect('panel')
+            else:
+                msg = "Wrong Username and Password!!"
+                messages.success(request,msg)
+                return render(request,'front/mylogin.html')
     return render(request,'front/mylogin.html')
 
 def myregister(request):
@@ -106,17 +141,19 @@ def myregister(request):
 
         if password1 != repassword1:
             msg = "Password Did'nt Match !"
-            return render(request,'front/msgbox.html',{'msg':msg,'site':site})
+            messages.success(request,msg)
+            return render(request,'front/mylogin.html')
 
         if len(password1) <= 8 :
             msg = "length of password must be greater than 8 !"
-            return render(request,'front/msgbox.html',{'msg':msg,'site':site})
+            messages.success(request,msg)
+            return render(request,'front/mylogin.html')
 
         #passwrord Authenicate
         count1=0
         count2=0 
         count3=0 
-        count4=0
+        # count4=0
         for i in password1:
             if i >= "1" and i <= "9":
                 count1=1
@@ -124,13 +161,14 @@ def myregister(request):
                 count2=1
             if i >= "A" and i <= "Z":
                 count3=1
-            if i >= "!" and i <= "(":
-                count4=1
+            # if i >= "!" and i <= "(":
+            #     count4=1
         #complete auth pass
 
-        if count1==0 or count2==0 or count3==0 or count4==0:
+        if count1==0 or count2==0 or count3==0 :
             msg = "Weak Password !"
-            return render(request,'front/msgbox.html',{'msg':msg,'site':site})
+            messages.success(request,msg)
+            return render(request,'front/mylogin.html')
 
         if len(User.objects.filter(username=username)) == 0 and len(User.objects.filter(email=email))==0:
             #ip,country and city of user extraction 
@@ -147,11 +185,14 @@ def myregister(request):
                 
             user = User.objects.create_user(username=username,email=email,password=password1) 
             b = Manager(name=name,e_mail=email,u_name=username,user_ip=ip,country=country)
+            msg = "Cograts Account is created !!"
+            messages.success(request,msg)
             b.save()
         else:
             msg = "Username or email Already Exist !"
-            return render(request,'front/msgbox.html',{'msg':msg,'site':site})
-        
+            messages.success(request,msg)
+            return render(request,'front/mylogin.html')  
+   
     return render(request,'front/mylogin.html')
 
 def mylogout(request):
@@ -159,6 +200,11 @@ def mylogout(request):
     return redirect('mylogin')
 
 def site_setting(request):
+    
+    #adminlogin start
+    if not request.user.is_authenticated:
+        return redirect('mylogin')
+    #adminlogin end
 
      #permission for access for masteruser
     perm = 0
@@ -169,11 +215,6 @@ def site_setting(request):
         error_msg = "Access Denied !"
         return render(request,'back/error.html',{'error':error_msg})
     #end
-
-     #adminlogin start
-    if not request.user.is_authenticated:
-        return redirect('mylogin')
-    #adminlogin end
 
     if request.method == "POST":
         titleName = request.POST.get('titlename')
@@ -334,3 +375,26 @@ def change_pass(request):
 
 def answer_cm(request,pk):
     return render(request,'back/answer_cm.html',{'pk':pk})
+
+
+
+
+#soup api
+    # client = Client('XXXXXXXwsdl file')
+    # result = client.service.funcname(2,3,4) #function need
+    # print(result)
+
+    #curl
+    # url = ""
+    # payload = {'a':"a"}
+    # result = requests.post(url,params=payload)
+    
+    #json
+    # url = ""
+    # data = {}
+    # headers = {'Content_Type':"application/json",'api-key':"XXXX"}
+    # result = requests.post(url,data=json.dumps(data),headers=headers)
+
+    #random msg selection start
+    # random_object =  Trending.objects.all()[randint(0,len(trending)-1)]
+    #end

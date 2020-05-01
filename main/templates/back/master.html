@@ -131,7 +131,7 @@
                         <div class="sidebar-section sidebar-user clearfix sidebar-nav-mini-hide">
                             <div class="sidebar-user-avatar">
                                 <a href="page_ready_user_profile.html">
-                                    <img src="img/placeholders/avatars/avatar2.jpg" alt="avatar">
+                                    <img src="{%static 'back/img/placeholders/avatars/avatar2.jpg'%}" alt="avatar">
                                 </a>
                             </div>
                             <div class="sidebar-user-name">{{request.user}}</div>
@@ -372,35 +372,33 @@
                             </a>
                             <ul class="dropdown-menu dropdown-custom dropdown-menu-right">
                                 <li class="dropdown-header text-center">Account</li>
-                                <li>
+                                <!-- <li>
                                     <a href="page_ready_timeline.html">
                                         <i class="fa fa-clock-o fa-fw pull-right"></i>
                                         <span class="badge pull-right">10</span>
                                         Updates
                                     </a>
 
-                                </li>
+                                </li> -->
                                 <li class="divider"></li>
                                 <li>
-                                    <a href="page_ready_user_profile.html">
+                                    <a href="/">
                                         <i class="fa fa-user fa-fw pull-right"></i>
                                         Profile
                                     </a>
                                 </li>
                                 <li class="divider"></li>
                                 <li>
-                                    <a href="page_ready_lock_screen.html"><i class="fa fa-lock fa-fw pull-right"></i>
-                                        Lock Account</a>
-                                    <a href="login.html"><i class="fa fa-ban fa-fw pull-right"></i> Logout</a>
+                                    <a href="/logout"><i class="fa fa-ban fa-fw pull-right"></i> Logout</a>
                                 </li>
-                                <li class="dropdown-header text-center">Activity</li>
+                                <!-- <li class="dropdown-header text-center">Activity</li>
                                 <li>
                                     <div class="alert alert-success alert-alt">
                                         <small>5 min ago</small><br>
                                         <i class="fa fa-thumbs-up fa-fw"></i> You had a new sale ($10)
                                     </div>
 
-                                </li>
+                                </li> -->
                             </ul>
                         </li>
                         <!-- END User Dropdown -->
@@ -471,6 +469,6 @@
 
 {% else %}
 
-pleasee login
+please login
 
 {% endif %}

@@ -9,5 +9,6 @@ class Manager(models.Model):
     e_mail = models.TextField()
     user_ip = models.CharField(max_length=15,default="")
     user_ip = models.TextField(default="")
+    country = models.CharField(default="",max_length=100)
     def __str__(self):
         return self.u_name

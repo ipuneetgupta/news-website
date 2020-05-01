@@ -30,6 +30,18 @@
 	<!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="{%static 'front/css/myfile.css'%}">
 
+
+	<!-- Stylesheets -->
+
+
+	<!-- Related styles of various icon packs and plugins -->
+	<link rel="stylesheet" href="{%static 'back/css/plugins.css'%}">
+	<!-- The themes stylesheet of this template (for using specific theme color in individual elements - must included last) -->
+	<link rel="stylesheet" href="{%static 'back/css/themes.css'%}">
+	<link rel="stylesheet" type="text/css" href="{%static 'front/css/myfile.css'%}">
+	<!-- END Stylesheets -->
+
+
 </head>
 
 <body class="animsition">
@@ -54,10 +66,11 @@
 							<span class="dis-inline-block cl16 slide100-txt pos-relative size-w-0" data-in="fadeInDown"
 								data-out="fadeOutDown">
 								{% for t in trending %}
-								<span class="dis-inline-block slide100-txt-item animated visible-false" style="text-align: justify;">
+								<span class="dis-inline-block slide100-txt-item animated visible-false"
+									style="text-align: justify;">
 									{{t.title}}
 								</span>
-                                 {% endfor %}
+								{% endfor %}
 							</span>
 						</div>
 					</div>
@@ -65,7 +78,6 @@
 
 					<div class="flex-wr-e-c">
 						<div class="left-topbar">
-
 
 							<a href="/about" class="left-topbar-item">
 								About
@@ -107,22 +119,30 @@
 				</div>
 			</div>
 
-            <!-- start message tag -->
+			<!-- start message tag -->
 			{% if messages %}
 			<ul class="messages">
-				   {% for message in messages %}
-						 <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-				   {% endfor %}
+				{% for message in messages %}
+				<li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+					{% endfor %}
 			</ul>
-			{% endif %} 
+			{% endif %}
 			<!-- end message appear -->
-			
-			
+
+
 			<!-- Header Mobile -->
 			<div class="wrap-header-mobile">
-				<!-- Logo moblie -->		
+				<!-- Logo moblie -->
 				<div class="logo-mobile">
-					<a href="index.html"><img src="images/icons/logo-01.png" alt="IMG-LOGO"></a>
+					<a href="/"><img style="display: inline-block;width:140px; height: 150px; align-self: center;"
+							src="{{site.imageUrl1}}" alt="IMG-LOGO"></a>
+					<a href="/panel/news/add" class="widget widget-hover-effect1">
+						<div class="widget-simple">
+							<h3 class="widget-content text-right animation-pullDown">
+								Publish <strong>Article</strong><br>
+							</h3>
+						</div>
+					</a>
 				</div>
 
 				<!-- Button show menu -->
@@ -136,120 +156,91 @@
 			<!-- Menu Mobile -->
 			<div class="menu-mobile">
 				<ul class="topbar-mobile">
-					<li class="left-topbar">
-						<span class="left-topbar-item flex-wr-s-c">
-							<span>
-								New York, NY
-							</span>
+					<div class="left-topbar">
 
-							<img class="m-b-1 m-rl-8" src="images/icons/icon-night.png" alt="IMG">
-
-							<span>
-								HI 58° LO 56°
-							</span>
-						</span>
-					</li>
-
-					<li class="left-topbar">
-						<a href="#" class="left-topbar-item">
+						<a href="/about" class="left-topbar-item">
 							About
 						</a>
 
-						<a href="#" class="left-topbar-item">
+						<a href="/contact" class="left-topbar-item">
 							Contact
 						</a>
 
-						<a href="#" class="left-topbar-item">
-							Sing up
+						<a href="/login" class="left-topbar-item">
+							Log in | Sing up
 						</a>
 
-						<a href="#" class="left-topbar-item">
-							Log in
-						</a>
-					</li>
+						<a href="#" class="left-topbar-item"></a>
+					</div>
 
-					<li class="right-topbar">
-						<a href="#">
+					<div class="right-topbar">
+						<a href="{{site.fb}}">
 							<span class="fab fa-facebook-f"></span>
 						</a>
 
-						<a href="#">
+						<a href="{{site.tw}}">
 							<span class="fab fa-twitter"></span>
 						</a>
 
-						<a href="#">
+						<a href="{{site.lk}}">
 							<span class="fab fa-pinterest-p"></span>
 						</a>
 
-						<a href="#">
+						<a href="{{site.vm}}">
 							<span class="fab fa-vimeo-v"></span>
 						</a>
 
-						<a href="#">
+						<a href="{{site.yt}}">
 							<span class="fab fa-youtube"></span>
 						</a>
-					</li>
+					</div>
 				</ul>
 
 				<ul class="main-menu-m">
-					<li>
-						<a href="index.html">Home</a>
-						<ul class="sub-menu-m">
-							<li><a href="index.html">Homepage v1</a></li>
-							<li><a href="home-02.html">Homepage v2</a></li>
-							<li><a href="home-03.html">Homepage v3</a></li>
-						</ul>
-
-						<span class="arrow-main-menu-m">
-							<i class="fa fa-angle-right" aria-hidden="true"></i>
-						</span>
+					<li class="mega-menu-item">
+						<a href="/all/news/">All News</a>
+						<div class="sub-mega-menu">
+							<div class="nav flex-column nav-pills" role="tablist">
+								<a class="nav-link active" data-toggle="pill" href="#news-0" role="tab">All</a>
+								{% for sc in cat %}
+								{% if sc.newsCount != 0 %}
+								<a class="nav-link" data-toggle="pill" href="#news-{{sc.pk}}"
+									role="tab">{{sc.catName}}</a>
+								{% endif %}
+								{% endfor %}
+							</div>
+						</div>
 					</li>
 
-					<li>
-						<a href="category-01.html">News</a>
+					<li> <a href="/panel/news/add">Publish Article</a>
 					</li>
 
-					<li>
-						<a href="category-02.html">Entertainment </a>
-					</li>
+					{% for ab in cat %}
+					{% if ab.newsCount != 0 %}
+					<li class="mega-menu-item">
+						<a href="{%url 'news_all_show' word=ab.catName %}">{{ab.catName}}</a>
 
-					<li>
-						<a href="category-01.html">Business</a>
-					</li>
 
-					<li>
-						<a href="category-02.html">Travel</a>
-					</li>
+						<div class="sub-mega-menu">
+							<div class="nav flex-column nav-pills" role="tablist">
+								<a class="nav-link active" data-toggle="pill" href="#news-0" role="tab">All</a>
+								{% for sc in subcat %}
+								{% if sc.catId == ab.pk %}
+								<a class="nav-link" data-toggle="pill" href="#news-{{sc.pk}}"
+									role="tab">{{sc.subcatName}}</a>
 
-					<li>
-						<a href="category-01.html">Life Style</a>
-					</li>
+								{% endif %}
+								{% endfor %}
+							</div>
+						</div>
 
-					<li>
-						<a href="category-02.html">Video</a>
 					</li>
+					{% endif %}
+					{% endfor %}
 
-					<li>
-						<a href="#">Features</a>
-						<ul class="sub-menu-m">
-							<li><a href="category-01.html">Category Page v1</a></li>
-							<li><a href="category-02.html">Category Page v2</a></li>
-							<li><a href="blog-grid.html">Blog Grid Sidebar</a></li>
-							<li><a href="blog-list-01.html">Blog List Sidebar v1</a></li>
-							<li><a href="blog-list-02.html">Blog List Sidebar v2</a></li>
-							<li><a href="blog-detail-01.html">Blog Detail Sidebar</a></li>
-							<li><a href="blog-detail-02.html">Blog Detail No Sidebar</a></li>
-							<li><a href="about.html">About Us</a></li>
-							<li><a href="contact.html">Contact Us</a></li>
-						</ul>
-
-						<span class="arrow-main-menu-m">
-							<i class="fa fa-angle-right" aria-hidden="true"></i>
-						</span>
-					</li>
 				</ul>
 			</div>
-			
+
 			<!--  -->
 			<div class="wrap-logo no-banner container">
 				<!-- Logo desktop -->
@@ -259,8 +250,20 @@
 							style="display: inline-block;width:350px; height: 110px; align-self: center;"
 							alt="LOGO"></a>
 				</div>
+
+				<a href="/panel/news/add" class="widget widget-hover-effect1">
+					<div class="widget-simple">
+						<div class="widget-icon pull-left themed-background-autumn animation-fadeIn">
+							<i class="fa fa-file-text"></i>
+						</div>
+						<h3 class="widget-content text-right animation-pullDown">
+							Publish <strong>Article</strong><br>
+							<small>About News</small>
+						</h3>
+					</div>
+				</a>
 			</div>
-			
+
 			<!--  -->
 			<div class="wrap-main-nav">
 				<div class="main-nav">
@@ -274,6 +277,121 @@
 							<li class="main-menu-active">
 								<a href="/">Home</a>
 							</li>
+
+
+
+							<li class="mega-menu-item">
+								<a href="/all/news/">All News</a>
+
+
+								<div class="sub-mega-menu">
+									<div class="nav flex-column nav-pills" role="tablist">
+										<a class="nav-link active" data-toggle="pill" href="#news-0" role="tab">All</a>
+										{% for sc in cat %}
+										{% if sc.newsCount != 0 %}
+										<a class="nav-link" data-toggle="pill" href="#news-{{sc.pk}}"
+											role="tab">{{sc.catName}}</a>
+										{% endif %}
+										{% endfor %}
+									</div>
+
+									<div class="tab-content">
+										<div class="tab-pane show active" id="news-0" role="tabpanel">
+											<div class="row">
+												{% for x in news %}
+												<div class="col-3">
+													<!-- Item post -->
+													<div>
+														<a href="{%url 'news_detail' word=x.title %}"
+															class="wrap-pic-w hov1 trans-03">
+															<img src="{{x.newsImageUrl}}"
+																style="display: inline-block; width: 160px; height: 140px;"
+																alt="IMG">
+														</a>
+
+														<div class="p-t-10">
+															<h5 class="p-b-5" style="text-align: justify;">
+																<a href="{%url 'news_detail' word=x.title %}"
+																	class="f1-s-5 cl3 hov-cl10 trans-03"
+																	style="display: inline-block;">
+																	{{x.title}}
+																</a>
+															</h5>
+
+															<span class="cl8">
+																<a href="{%url 'news_all_show' word=x.catName %}"
+																	class="f1-s-6 cl8 hov-cl10 trans-03">
+																	{{x.catName}}
+																</a>
+
+																<span class="f1-s-3 m-rl-3">
+																	-
+																</span>
+
+																<span class="f1-s-3">
+																	{{x.publishDate}}
+																</span>
+															</span>
+														</div>
+													</div>
+												</div>
+												{% endfor %}
+											</div>
+										</div>
+										{% for sc in cat %}
+										{% if sc.newsCount != 0 %}
+
+										<div class="tab-pane" id="news-{{sc.pk}}" role="tabpanel">
+											<div class="row">
+												{% for catnews in news %}
+												{% if catnews.ocatId == sc.pk %}
+												<div class="col-3">
+													<!-- Item post -->
+													<div>
+														<a href="{%url 'news_detail' word=catnews.title %}"
+															class="wrap-pic-w hov1 trans-03">
+															<img src="{{catnews.newsImageUrl}}"
+																style="display: inline-block; width: 160px; height: 140px;"
+																alt="IMG">
+														</a>
+
+														<div class="p-t-10">
+															<h5 class="p-b-5" style="text-align: justify;">
+																<a href="{%url 'news_detail' word=catnews.title %}"
+																	class="f1-s-5 cl3 hov-cl10 trans-03">
+																	{{catnews.title}}
+																</a>
+															</h5>
+
+															<span class="cl8">
+																<a href="{%url 'news_all_show' word=catnews.catName %}"
+																	class="f1-s-6 cl8 hov-cl10 trans-03">
+																	{{catnews.catName}}
+																</a>
+
+																<span class="f1-s-3 m-rl-3">
+																	-
+																</span>
+
+																<span class="f1-s-3">
+																	{{catnews.publishDate}}
+																</span>
+															</span>
+														</div>
+													</div>
+												</div>
+												{% endif %}
+												{% endfor %}
+											</div>
+										</div>
+										{% endif %}
+										{% endfor %}
+
+									</div>
+								</div>
+							</li>
+
+
 							{% for ab in cat %}
 							{% if ab.newsCount != 0 %}
 							<li class="mega-menu-item">
@@ -317,7 +435,8 @@
 															</h5>
 
 															<span class="cl8">
-																<a href="{%url 'news_all_show' word=x.catName %}" class="f1-s-6 cl8 hov-cl10 trans-03">
+																<a href="{%url 'news_all_show' word=x.catName %}"
+																	class="f1-s-6 cl8 hov-cl10 trans-03">
 																	{{x.catName}}
 																</a>
 
@@ -361,7 +480,8 @@
 															</h5>
 
 															<span class="cl8">
-																<a href="{%url 'news_all_show' word=catnews.catName %}" class="f1-s-6 cl8 hov-cl10 trans-03">
+																<a href="{%url 'news_all_show' word=catnews.catName %}"
+																	class="f1-s-6 cl8 hov-cl10 trans-03">
 																	{{catnews.catName}}
 																</a>
 
@@ -415,9 +535,9 @@
 
 						<div>
 							<p class="f1-s-1 cl11 p-b-16" style="text-align: justify;">
-								{{site.about}}
+								{{site.about|safe}}
 							</p>
-
+						</br>
 							<p class="f1-s-1 cl11 p-b-16">
 								Any questions? Call us on {{site.tel}}
 							</p>
@@ -446,14 +566,16 @@
 							<div class='newletter' style="padding-top: 20px; padding-left: 0px;">
 								<form action="{%url 'news_letter' %}" method="post" enctype="multipart/form-data">
 									{% csrf_token %}
-								<input class="bo-1-rad-3 bocl13 size-a-19 f1-s-13 cl5 plh6 p-rl-18 m-b-20" type="text" name="emailOrphone" placeholder="Email or Phone No*">
-								<button type="submit" class="btn btn-sm btn-success"><i class="fa fa-plus"></i> Subscibe</button>
-								
+									<input class="bo-1-rad-3 bocl13 size-a-19 f1-s-13 cl5 plh6 p-rl-18 m-b-20"
+										type="text" name="emailOrphone" placeholder="Email or Phone No*">
+									<button type="submit" class="btn btn-sm btn-success"><i class="fa fa-plus"></i>
+										Subscibe</button>
+
 								</form>
 							</div>
 						</div>
 					</div>
-                   
+
 					<div class="col-sm-6 col-lg-4 p-b-20">
 						<div class="size-h-3 flex-s-c">
 							<h5 class="f1-m-7 cl0">
@@ -465,13 +587,15 @@
 							{% for pop in pop3news %}
 							{% if pop.views != 0 %}
 							<li class="flex-wr-sb-s p-b-20">
-								<a href="{%url 'news_detail' word=pop.title %}" class="size-w-4 wrap-pic-w hov1 trans-03">
+								<a href="{%url 'news_detail' word=pop.title %}"
+									class="size-w-4 wrap-pic-w hov1 trans-03">
 									<img src="{{pop.newsImageUrl}}" alt="IMG">
 								</a>
 
 								<div class="size-w-5">
-									<h6 class="p-b-5"  style="text-align: justify;">
-										<a href="{%url 'news_detail' word=pop.title %}" class="f1-s-5 cl11 hov-cl10 trans-03"> 
+									<h6 class="p-b-5" style="text-align: justify;">
+										<a href="{%url 'news_detail' word=pop.title %}"
+											class="f1-s-5 cl11 hov-cl10 trans-03">
 											{{pop.title}}
 										</a>
 									</h6>
@@ -498,7 +622,8 @@
 							{% if c.newsCount != 0 %}
 
 							<li class="how-bor1 p-rl-5 p-tb-10">
-								<a href="{%url 'news_all_show' word=c.catName %}" class="f1-s-5 cl11 hov-cl10 trans-03 p-tb-8">
+								<a href="{%url 'news_all_show' word=c.catName %}"
+									class="f1-s-5 cl11 hov-cl10 trans-03 p-tb-8">
 									{{c.catName}} ({{c.newsCount}})
 								</a>
 							</li>
@@ -520,7 +645,7 @@
 						Copyright &copy;
 						<script>document.write(new Date().getFullYear());</script> All rights reserved | This template
 						is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="{{site.mylink}}"
-							target="_blank">myTeam</a>
+							target="_blank">puneetGupta</a>
 						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 				</span>
 			</div>
@@ -534,22 +659,14 @@
 		</span>
 	</div>
 
-	<!-- Modal Video 01-->
-	<div class="modal fade" id="modal-video-01" tabindex="-1" role="dialog" aria-hidden="true">
-		<div class="modal-dialog" role="document" data-dismiss="modal">
-			<div class="close-mo-video-01 trans-0-4" data-dismiss="modal" aria-label="Close">&times;</div>
-
-			<div class="wrap-video-mo-01">
-				<div class="video-mo-01">
-
-				</div>
-			</div>
-		</div>
-	</div>
-	
-	
 	{% block footerscript %}
 	{% endblock %}
+
+
+
+
+	<script src="{%static 'back/js/pages/index.js'%}"></script>
+	<script>$(function () { Index.init(); });</script>
 	<!--===============================================================================================-->
 	<script src="{%static 'front/vendor/jquery/jquery-3.2.1.min.js'%}"></script>
 	<!--===============================================================================================-->

@@ -11,6 +11,8 @@ from comment.models import Comment
 from django.core.paginator import Paginator,PageNotAnInteger,Page,EmptyPage
 import random
 from itertools import chain
+from .utils import randomNumGen
+from .api_scrapper import scrap_news_list
 
 pageno = 0
 mysearch = ""  #global variable for solve conflict of pagination
@@ -19,13 +21,18 @@ mysearch = ""  #global variable for solve conflict of pagination
 def news_detail(request,word):
   
     site = Main.objects.get(pk=4)
-    news = News.objects.all().order_by('-pk')
     cat = Cat.objects.all()
     subcat = SubCat.objects.all()
     last3news = News.objects.all().order_by('-pk')[:3]
     popnews =  News.objects.all().order_by('-views')
     pop3news =  News.objects.all().order_by('-views')[:3]
     trending = Trending.objects.all().order_by('-pk')[:5]
+
+    news = list()
+    for x in cat:
+        a = News.objects.filter(ocatId = x.pk).order_by('-pk')
+        news.append(a[:4])
+    news = list(chain(*news))
 
     #tag
     if len( News.objects.filter(title=word)) != 0:
@@ -66,13 +73,18 @@ def news_detail(request,word):
 def news_detail_shorturl(request,randNum):
 
     site = Main.objects.get(pk=4)
-    news = News.objects.all().order_by('-pk')
     cat = Cat.objects.all()
     subcat = SubCat.objects.all()
     last3news = News.objects.all().order_by('-pk')[:3]
     popnews =  News.objects.all().order_by('-views')
     pop3news =  News.objects.all().order_by('-views')[:3]
     trending = Trending.objects.all().order_by('-pk')[:5]
+
+    news = list()
+    for x in cat:
+        a = News.objects.filter(ocatId = x.pk).order_by('-pk')
+        news.append(a[:4])
+    news = list(chain(*news))
 
     #tag
     if len( News.objects.filter(rand=randNum)) != 0:
@@ -124,14 +136,38 @@ def news_list(request):
             perm = 1
     #Paginator
     if perm == 0:
-        news = News.objects.filter(publisherName=request.user)
+
+        if request.GET.get('page'):
+            newss = News.objects.filter(publisherName=request.user)
+            paginator = Paginator(newss,5)
+            page = request.GET.get('page')
+            global pageno 
+            pageno = int(page)
+            try:
+                news = paginator.page(page)
+            except EmptyPage:
+                news = paginator.page(paginator.num_pages)
+            except PageNotAnInteger:
+                news = paginator.page(1)
+        
+        else:
+            newss = News.objects.filter(publisherName=request.user)
+            paginator = Paginator(newss,5)
+            page = pageno
+            try:
+                news = paginator.page(page)
+            except EmptyPage:
+                news = paginator.page(paginator.num_pages)
+            except PageNotAnInteger:
+                news = paginator.page(1)
+
     elif perm == 1:
 
         if request.GET.get('page'):
             newss = News.objects.all()
             paginator = Paginator(newss,5)
             page = request.GET.get('page')
-            global pageno 
+            pageno 
             pageno = int(page)
             try:
                 news = paginator.page(page)
@@ -155,22 +191,10 @@ def news_list(request):
 
 def add_news(request):
 
-     #adminlogin start
+    #adminlogin start
     if not request.user.is_authenticated:
         return redirect('mylogin')
     #adminlogin end
-
-     #permission for access for masteruser of newslist editor delete
-    perm = 0
-    for i in request.user.groups.all():
-        if i.name == 'masteruser':
-            perm = 1
-    if perm == 0:
-        a = News.objects.get(pk=pk).publisherName
-        if str(a) != str(request.user):
-            error_msg = "Access Denied !"
-            return render(request,'back/error.html',{'error':error_msg})
-    #end
     
     # #datetime
     now = datetime.datetime.now()
@@ -454,13 +478,18 @@ def news_publish(request,pk):
 
 def news_all_show(request,word):
     site = Main.objects.get(pk=4)
-    news = News.objects.all().order_by('-pk')
     cat = Cat.objects.all()
     subcat = SubCat.objects.all()
     last3news = News.objects.all().order_by('-pk')[:3]
     popnews =  News.objects.all().order_by('-views')
     pop3news =  News.objects.all().order_by('-views')[:3]
     trending = Trending.objects.all().order_by('-pk')[:5]
+
+    news = list()
+    for x in cat:
+        a = News.objects.filter(ocatId = x.pk).order_by('-pk')
+        news.append(a[:4])
+    news = list(chain(*news))
 
     showcat = Cat.objects.get(catName=word)
 
@@ -487,7 +516,6 @@ def news_all_show(request,word):
 
 def all_news(request):
     site = Main.objects.get(pk=4)
-    news = News.objects.all().order_by('-pk')
     cat = Cat.objects.all()
     subcat = SubCat.objects.all()
     last3news = News.objects.all().order_by('-pk')[:3]
@@ -495,6 +523,11 @@ def all_news(request):
     pop3news =  News.objects.all().order_by('-views')[:3]
     trending = Trending.objects.all().order_by('-pk')[:5]
 
+    news = list()
+    for x in cat:
+        a = News.objects.filter(ocatId = x.pk).order_by('-pk')
+        news.append(a[:4])
+    news = list(chain(*news))
     
     #Paginator
     allnewss = News.objects.all()
@@ -570,4 +603,11 @@ def all_news_search(request):
     link = "all/news/"
 
     return render(request,'front/news_all.html',{'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'tags':tags,'subcat':subcat,'news':news,'trending':trending,'allnews':allnews})
+
+def update_list(request):
+    categories_news = Cat.objects.all()
+    for x in categories_news:
+        scrap_news_list(x.catName)
+        print('successfully scrap news!!'+str(x.catName))
+    return redirect('news_list')
 

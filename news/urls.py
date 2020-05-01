@@ -10,7 +10,8 @@ urlpatterns = [
     url(r'^panel/news/publish/(?P<pk>\d+)/$', views.news_publish, name='news_publish'),
     url(r'^url/?short=/(?P<randNum>\d+)/$', views.news_detail_shorturl, name='news_detail_shorturl'),
     url(r'^all/news/(?P<word>.*)/$', views.news_all_show, name='news_all_show'),
-    url(r'^all/newss/$', views.all_news, name='all_news'),
+    url(r'^all/news/$', views.all_news, name='all_news'),
     url(r'^search/$', views.all_news_search, name='all_news_search'),
+    url(r'^update/news/list/$', views.update_list, name='update_list'),
 
 ]

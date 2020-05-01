@@ -13,16 +13,23 @@
             </h1>
         </div>
     </div>
+   
+</div>
     <ul class="breadcrumb breadcrumb-top">
         <li>News</li>
         <li><a href="/panel/news/list">Lists</a></li>
     </ul>
+
     <!-- END Datatables Header -->
 
     <!-- Datatables Content -->
     <div class="block full">
         <div class="block-title">
             <h2><strong>News</strong> List</h2>
+            {% if perms.main.master_user %}
+            <a href="/update/news/list/" data-toggle="tooltip" style="margin-left:80% ;" title="UpdateList from server"
+            class="btn btn-xs btn-success">Update</a>
+            {% endif %}
         </div>
         <div class="table-responsive">
             <table id="" class="table table-vcenter table-condensed table-bordered">

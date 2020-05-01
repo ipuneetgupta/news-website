@@ -15,6 +15,7 @@ class News(models.Model):
     image_url = models.URLField(null=True,blank=True)
     newsImageName = models.CharField(max_length=300,null=True,blank=True)
     publishDate = models.CharField(default=None,max_length=300,null=True,blank=True)
+    time = models.CharField(default=None,max_length=300,null=True,blank=True)
     writerName = models.CharField(default=None,max_length=300,null=True,blank=True)
     catName = models.CharField(default=None,max_length=300,null=True,blank=True)
     catId = models.IntegerField(default=0,null=True,blank=True)
@@ -22,18 +23,40 @@ class News(models.Model):
     ocatId = models.IntegerField(default=0,null=True,blank=True)
     tag = models.TextField(default=None,max_length=300,null=True,blank=True)
     act = models.IntegerField(default=0,null=True,blank=True)
+    newsUrl = models.URLField(null=True,blank=True)
     publisherName = models.CharField(default=None,max_length=300,null=True,blank=True)
     rand = models.IntegerField(default=0,null=True,blank=True)
+    source_name = models.CharField(max_length=200,null=True,blank=True,default=None)
     
     def save(self, *args, **kwargs):
         if self.image_url and not self.newsImageUrl:
-            img_temp = NamedTemporaryFile(delete=True)
-            img_temp.write(urlopen(self.image_url).read())
-            img_temp.flush()
-            self.newsImageUrl.save(f"image_{self.pk}.jpeg", File(img_temp))
-            self.newsImageUrl = self.newsImageUrl.url
-            self.newsImageName = str(self.newsImageUrl)[7:]
+            # img_temp = NamedTemporaryFile(delete=True)
+            # try:
+            #     img_temp.write(urlopen(self.image_url).read())
+            #     img_temp.flush()
+            #     self.newsImageUrl.save(f"image_{self.pk}.jpeg", File(img_temp))
+            #     self.newsImageUrl = self.newsImageUrl.url
+            #     self.newsImageName = str(self.newsImageUrl)[7:]
+            # except:
+            self.newsImageUrl = self.image_url
+            self.newsImageName = None
+                
         super(News, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return self.title
+
+
+class HeadLine(models.Model):
+
+    title = models.CharField(default=None,max_length=500,null=True,blank=True)
+    newsUrl = models.URLField(null=True,blank=True,default=None)
+    publishDate = models.CharField(default=None,max_length=300,null=True,blank=True)
+    time = models.CharField(default=None,max_length=300,null=True,blank=True)
+    writerName = models.CharField(default=None,max_length=300,null=True,blank=True)
+    ocatId = models.IntegerField(default=0,null=True,blank=True)
+    act = models.IntegerField(default=0,null=True,blank=True)
+    publisherName = models.CharField(default=None,max_length=300,null=True,blank=True)
 
     def __str__(self):
         return self.title

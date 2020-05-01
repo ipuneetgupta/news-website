@@ -229,7 +229,6 @@
 
                 <!-- Pagination -->
                 <div class="flex-wr-s-c m-rl--7 p-t-15">
-                    <ul class="pager">
                         <!-- <p style="display: inline-block;text-align: center;">Page {{news.number}}  {{news.paginator.num_pages}}</p> -->
                         {% if allnews.has_previous %}
                         <li class="previous"><a style="color: black;"
@@ -254,7 +253,6 @@
                         <li class="next"><a style="color: black;" href="?page={{allnews.next_page_number}}">Next</a>
                         </li>
                         {% endif %}
-                    </ul>
                 </div>
             </div>
 
