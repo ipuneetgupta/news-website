@@ -24,14 +24,14 @@ def home(request):
     
     site = Main.objects.get(pk=4)
     # news = News.objects.all().filter(act=1).order_by('-pk')
-    latestnews = News.objects.all().filter(act=1).order_by('-pk')[:6]
+    latestnews = News.objects.all().filter(act=1).order_by('-pk')[7:13]
     cat = Cat.objects.all()
     subcat = SubCat.objects.all()
     last3news = News.objects.all().filter(act=1).order_by('-pk')[:3]
     popnews =  News.objects.all().filter(act=1).order_by('-views')[:4]
     pop3news =  News.objects.all().filter(act=1).order_by('-views')[:3]
     trending = Trending.objects.all().order_by('-pk')[:5]
-    last4news = News.objects.all().filter(act=1).order_by('-pk')[:4]
+    last4news = News.objects.all().filter(act=1).order_by('-pk')[3:7]
 
     headline = list()
     for x in cat:
@@ -375,6 +375,9 @@ def change_pass(request):
 
 def answer_cm(request,pk):
     return render(request,'back/answer_cm.html',{'pk':pk})
+
+def mycovid(request):
+    return render(request,'front/corono_table.html')
 
 
 

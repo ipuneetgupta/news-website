@@ -123,7 +123,7 @@ def news_detail_shorturl(request,randNum):
     return render(request,'front/news_detail.html',{'shownews':shownews,'site':site,'cat':cat,'popnews':popnews,'pop3news':pop3news,'subcat':subcat,'news':news,'tags':tags,'trending':trending,'cms':cms,'iscommentPresent':iscommentPresent,'link':link,'cmcount':cmcount})
 
 def news_list(request):
-
+   
      #adminlogin start
     if not request.user.is_authenticated:
         return redirect('mylogin')
@@ -136,13 +136,12 @@ def news_list(request):
             perm = 1
     #Paginator
     if perm == 0:
-
-        if request.GET.get('page'):
+        if request.GET.get('page') != 0:
             newss = News.objects.filter(publisherName=request.user)
-            paginator = Paginator(newss,5)
+            paginator = Paginator(newss,10)
             page = request.GET.get('page')
-            global pageno 
-            pageno = int(page)
+            global pageno
+            pageno = page
             try:
                 news = paginator.page(page)
             except EmptyPage:
@@ -152,7 +151,7 @@ def news_list(request):
         
         else:
             newss = News.objects.filter(publisherName=request.user)
-            paginator = Paginator(newss,5)
+            paginator = Paginator(newss,10)
             page = pageno
             try:
                 news = paginator.page(page)
@@ -161,14 +160,12 @@ def news_list(request):
             except PageNotAnInteger:
                 news = paginator.page(1)
 
-    elif perm == 1:
-
-        if request.GET.get('page'):
+    else:
+        if request.GET.get('page') != 0:
             newss = News.objects.all()
-            paginator = Paginator(newss,5)
+            paginator = Paginator(newss,10)
             page = request.GET.get('page')
-            pageno 
-            pageno = int(page)
+            pageno = page
             try:
                 news = paginator.page(page)
             except EmptyPage:
@@ -177,8 +174,8 @@ def news_list(request):
                 news = paginator.page(1)
         
         else:
-            newss = News.objects.all()
-            paginator = Paginator(newss,5)
+            newss = News.objects.all().order_by('pk')
+            paginator = Paginator(newss,10)
             page = pageno
             try:
                 news = paginator.page(page)

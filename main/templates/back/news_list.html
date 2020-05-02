@@ -38,9 +38,8 @@
                         <th class="text-center">ID</th>
                         <th class="text-center"><i class="gi gi-user"></i></th>
                         <th>Title</th>
-                        <th>summary</th>
                         <th>Date</th>
-                        <th>Category</th>
+                        <th>Time</th>
                         <th>Writer</th>
                         <th>Status</th>
                         <th>Publisher Name</th>
@@ -55,9 +54,8 @@
                         <td class="text-center"><img style="display: inline-block; width: 50px; height: 50px;"
                                 src="{{c.newsImageUrl}}" alt="avatar" class="img-circle"></td>
                         <td style=" text-align: justify;">{{c.title|safe}}</td>
-                        <td style=" text-align: justify;">{{c.newsSummary|safe}}</td>
                         <td>{{c.publishDate}}</td>
-                        <td>{{c.catName}}</td>
+                        <td>{{c.time}}</td>
                         <td>{{c.writerName}}</td>
                         {% if c.act == 0%}
                         <td class="text-warning">pending</td>
