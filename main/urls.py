@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^register/$', views.myregister, name='myregister'),
     url(r'^answer/comments/(?P<pk>\d+)/$', views.answer_cm, name='answer_cm'),
     url(r'^covid/table/$', views.mycovid, name='mycovid'),
+    url(r'^privacy/policy/$', views.privacy, name='privacy'),
 
 
 ]

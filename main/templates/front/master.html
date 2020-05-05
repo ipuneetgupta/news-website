@@ -83,13 +83,23 @@
 								About
 							</a>
 
+							<a href="/privacy/policy" class="left-topbar-item">
+								Privacy Policy
+							</a>
+
 							<a href="/contact" class="left-topbar-item">
 								Contact
 							</a>
-
+							{% if user.is_authenticated %}
+							<a href="/logout" class="left-topbar-item">
+								Logout
+							</a>
+							{% else %}
 							<a href="/login" class="left-topbar-item">
 								Log in | Sing up
 							</a>
+							{% endif %}
+
 
 							<a href="#" class="left-topbar-item"></a>
 						</div>
@@ -162,13 +172,22 @@
 							About
 						</a>
 
+						<a href="/privacy/policy" class="left-topbar-item">
+							Privacy Policy
+						</a>
+
 						<a href="/contact" class="left-topbar-item">
 							Contact
 						</a>
-
+						{% if user.is_authenticated %}
+						<a href="/logout" class="left-topbar-item">
+							Logout
+						</a>
+						{% else %}
 						<a href="/login" class="left-topbar-item">
 							Log in | Sing up
 						</a>
+						{% endif %}
 
 						<a href="#" class="left-topbar-item"></a>
 					</div>
@@ -537,7 +556,7 @@
 							<p class="f1-s-1 cl11 p-b-16" style="text-align: justify;">
 								{{site.about|safe}}
 							</p>
-						</br>
+							</br>
 							<p class="f1-s-1 cl11 p-b-16">
 								Any questions? Call us on {{site.tel}}
 							</p>

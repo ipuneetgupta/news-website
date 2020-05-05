@@ -197,7 +197,7 @@ def myregister(request):
 
 def mylogout(request):
     logout(request)
-    return redirect('mylogin')
+    return redirect('home')
 
 def site_setting(request):
     
@@ -379,8 +379,20 @@ def answer_cm(request,pk):
 def mycovid(request):
     return render(request,'front/corono_table.html')
 
+def privacy(request):
+    site = Main.objects.get(pk=4)
+    cat = Cat.objects.all()
+    subcat = SubCat.objects.all()
+    pop3news =  News.objects.all().order_by('-views')[:3]
+    trending = Trending.objects.all().order_by('-pk')[:5]
 
-
+    news = list()
+    for x in cat:
+        a = News.objects.filter(ocatId = x.pk).order_by('-pk')
+        news.append(a[:4])
+    news = list(chain(*news))
+    d = {'site':site,'cat':cat,'subcat':subcat,'news':news,'pop3news':pop3news,'trending':trending}
+    return render(request,'front/privacypolicy.html',d)
 
 #soup api
     # client = Client('XXXXXXXwsdl file')
