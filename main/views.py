@@ -394,6 +394,9 @@ def privacy(request):
     d = {'site':site,'cat':cat,'subcat':subcat,'news':news,'pop3news':pop3news,'trending':trending}
     return render(request,'front/privacypolicy.html',d)
 
+def termCondition(request):
+    return render(request,'front/term.html')
+
 #soup api
     # client = Client('XXXXXXXwsdl file')
     # result = client.service.funcname(2,3,4) #function need
