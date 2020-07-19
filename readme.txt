@@ -1,8 +1,6 @@
 
 Puneet Gupta (02520902717)
-Vikash
-Pratyush
-Vishwanath
+
 
 
 
@@ -26,5 +24,5 @@ The project will be available at 127.0.0.1:8000.
 
 Credits:
 
-This is a 'Web Technology' project is a work of a group of 4 students of G.B. pant engg. college
+This is a 'Web Technology' project 
 
